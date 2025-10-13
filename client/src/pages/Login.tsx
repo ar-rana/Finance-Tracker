@@ -5,7 +5,8 @@ import logo from "../assets/logo.png";
 
 const Login: React.FC = () => {
   return (
-    <div className="max-h-screen flex bg-gray-900 md:p-10 p-4">
+    <div className="h-screen flex bg-gray-900 md:p-10 p-4">
+        {/* Left Panel */}
       <div
         className="hidden md:flex w-1/2 items-center justify-center p-12 bg-gradient-to-b from-gray-800 via-gray-900 to-black bg-blend-overlay bg-cover bg-center text-white rounded-2xl"
         style={{ backgroundImage: `url(${finup_bg})` }}
@@ -23,7 +24,7 @@ const Login: React.FC = () => {
         </div>
       </div>
 
-      {/* Right panel - form */}
+      {/* Right panel */}
       <main className="flex flex-1 items-center justify-center p-6">
         <div className="w-full max-w-md bg-gray-900/95 border border-gray-800 rounded-xl shadow-xl p-8">
           <div className="mb-6 text-center">
@@ -51,14 +52,12 @@ const Login: React.FC = () => {
             </button>
           </div>
 
-          {/* Separator */}
           <div className="flex items-center my-4">
             <hr className="flex-1 border-gray-800" />
             <span className="mx-3 text-xs text-gray-500">or</span>
             <hr className="flex-1 border-gray-800" />
           </div>
 
-          {/* Form */}
           <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
             <label className="block">
               <span className="text-xs text-gray-400">Email</span>
