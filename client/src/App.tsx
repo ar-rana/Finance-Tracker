@@ -1,12 +1,14 @@
 import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Login from "./pages/Login.tsx";
 
 function App() {
   return (
-    <>
-      <h1 className="p-1 m-2.5 text-2xl font-bold text-gray-400">
-        Client Instantiated
-      </h1>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />}/>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
