@@ -1,0 +1,172 @@
+import React, { useState } from "react";
+import Modal from "react-modal";
+import type { ModalState } from "../../types/Component";
+
+const AddInflow: React.FC<ModalState> = (props) => {
+  const [year, setYear] = useState<string>("");
+  const [month, setMonth] = useState<string>("");
+  const [amount, setAmount] = useState<string>("0");
+  const [source, setSource] = useState<string>("Food");
+  const [description, setDescription] = useState<string>("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // props.setOpen(false);
+  };
+
+  if (!props.open) return null;
+  return (
+    <Modal
+      className="z-101 fixed h-[45%] w-[50%] left-1/2 right-1/2 transform -translate-x-1/2 translate-y-1/2 shadow-2xl rounded-2xl overflow-auto bg-gray-800 border-2 border-white scrollbar-hide"
+      style={{
+        overlay: {
+          backgroundColor: "transparent",
+        },
+      }}
+      isOpen={props.open}
+      onRequestClose={() => props.setOpen(false)}
+      ariaHideApp={false}
+    >
+      <div className="bg-gradient-to-r bg-gray-700 px-6 py-3 flex items-center justify-between">
+        <h2 className="text-xl font-bold text-white">Add Money Inflow</h2>
+        <i
+          className="font-bold fa fa-close text-white hover:text-gray-400"
+          onClick={() => props.setOpen((prev) => !prev)}
+        />
+      </div>
+
+      <div className="p-4 h-max">
+        <form className="space-y-2">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="amount"
+                className="block text-sm font-medium text-white mb-2"
+              >
+                Amount
+              </label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                  ₹
+                </span>
+                <input
+                  id="amount"
+                  name="amount"
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  required
+                  placeholder="0.0"
+                  className="w-full pl-8 pr-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                />
+              </div>
+            </div>
+            <div>
+              <label
+                htmlFor="source"
+                className="block text-sm font-medium text-white mb-2"
+              >
+                Source
+              </label>
+              <select
+                id="source"
+                name="source"
+                value={source}
+                onChange={(e) => setSource(e.target.value)}
+                required
+                className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition appearance-none cursor-pointer"
+              >
+                <option value="">Select</option>
+                <option value="Salary">Salary</option>
+                <option value="Gift">Gift</option>
+                <option value="Stocks">Stocks</option>
+                <option value="SIP_MF">SIP/MF</option>
+                <option value="Miscellaneous">Miscellaneous</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="month"
+                className="block text-sm font-medium text-white mb-2"
+              >
+                Month
+              </label>
+              <select
+                id="month"
+                name="month"
+                value={month}
+                onChange={(e) => setMonth(e.target.value)}
+                required
+                className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition appearance-none cursor-pointer"
+              >
+                <option value="">Select</option>
+                <option value="January">January</option>
+                <option value="February">February</option>
+                <option value="March">March</option>
+                <option value="April">April</option>
+                <option value="May">May</option>
+                <option value="June">June</option>
+                <option value="July">July</option>
+                <option value="August">August</option>
+                <option value="September">September</option>
+                <option value="October">October</option>
+                <option value="November">November</option>
+                <option value="December">December</option>
+              </select>
+            </div>
+
+            <div>
+              <label
+                htmlFor="year"
+                className="block text-sm font-medium text-white mb-2"
+              >
+                Year
+              </label>
+              <input
+                id="year"
+                name="year"
+                type="number"
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                required
+                placeholder="0000"
+                className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+              />
+            </div>
+          </div>
+
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-white mb-2"
+          >
+            Description
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={2}
+            placeholder="Add notes..."
+            className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition resize-none"
+          />
+
+          <button
+            type="submit"
+            className="flex-1 px-6 py-3 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+    </Modal>
+  );
+};
+
+export default AddInflow;

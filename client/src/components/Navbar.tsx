@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 
-const Navbar: React.FC = () => {
+interface NavInterface {
+  setExpenseOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setInflowOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Navbar: React.FC<NavInterface> = (props) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   
   return (
-    <div className="flex h-screen bg-transparent max-h-screen absolute z-101">
+    <div className="flex h-screen bg-transparent max-h-screen absolute z-100">
       <div
         className={`bg-white border-r border-gray-200 transition-all duration-300 flex flex-col h-full ${
           expanded ? "w-48" : "w-12"
@@ -44,6 +49,24 @@ const Navbar: React.FC = () => {
               >
                 <i className="fa fa-calendar-o text-green-600 text-center" />
                 {expanded && <span className="ml-3 text-gray-800 text-sm font-semibold">Timeline</span>}
+              </button>
+            </li>
+            <li className="mb-1">
+              <button 
+                onClick={() => props.setExpenseOpen(prev => !prev)}
+                className="w-full text-left flex items-center h-10 px-4 py-2 hover:bg-green-50 rounded transition"
+              >
+                <i className="fa fa-credit-card text-green-600 text-center" />
+                {expanded && <span className="ml-3 text-gray-800 text-sm font-semibold" >Add Expense</span>}
+              </button>
+            </li>
+            <li className="mb-1">
+              <button 
+                onClick={() => props.setInflowOpen(prev => !prev)}
+                className="w-full text-left flex items-center h-10 px-4 py-2 hover:bg-green-50 rounded transition"
+              >
+                <i className="fa fa-money text-green-600 text-center" />
+                {expanded && <span className="ml-3 text-gray-800 text-sm font-semibold">Add Inflow</span>}
               </button>
             </li>
 
