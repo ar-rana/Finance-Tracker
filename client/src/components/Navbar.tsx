@@ -41,7 +41,7 @@ const Navbar: React.FC<NavInterface> = (props) => {
                 className="w-full text-left flex items-center h-10 px-4 py-2 hover:bg-green-50 rounded transition"
               >
                 <i className="fa fa-calendar-o text-green-600 text-center" />
-                {expanded && <span className="ml-3 text-gray-800 text-sm font-semibold">Timeline</span>}
+                {expanded && <span className="ml-3 text-gray-800 text-sm font-semibold">Global Timeline</span>}
               </button>
             </li>
             <li className="mb-1">
