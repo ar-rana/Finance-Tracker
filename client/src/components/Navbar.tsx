@@ -10,7 +10,7 @@ const Navbar: React.FC<NavInterface> = (props) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   
   return (
-    <div className="flex h-screen bg-transparent max-h-screen absolute z-100">
+    <div className="flex h-screen bg-transparent max-h-screen fixed z-100">
       <div
         className={`bg-white border-r border-gray-200 transition-all duration-300 flex flex-col h-full ${
           expanded ? "w-48" : "w-12"
@@ -28,14 +28,6 @@ const Navbar: React.FC<NavInterface> = (props) => {
         </button>
         <nav className="flex-1 mt-4">
           <ul className="flex flex-col h-full">
-            <li className="mb-1">
-              <button
-                className="w-full text-left flex items-center h-10 px-4 py-2 hover:bg-green-50 rounded transition"
-              >
-                <i className="fa fa-home text-green-600 text-center" />
-                {expanded && <span className="ml-3 text-gray-800 text-sm font-semibold">Home</span>}
-              </button>
-            </li>
             <li className="mb-1">
               <button
                 className="w-full text-left flex items-center h-10 px-4 py-2 hover:bg-green-50 rounded transition"
