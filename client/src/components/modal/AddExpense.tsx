@@ -1,23 +1,35 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import type { ModalState } from "../../types/Component";
+import type { AddExpenseForm } from "../../types/FormsData";
+import FormSubmitBtn from "../buttons/FormSubmitBtn";
 
 const AddExpense: React.FC<ModalState> = (props) => {
-  const [amount, setAmount] = useState<string>("0");
-  const [type, setType] = useState<string>("Food");
-  const [description, setDescription] = useState<string>("");
-  const [year, setYear] = useState<string>("");
-  const [month, setMonth] = useState<string>("");
+  const [expenseData, setExpenseData] = useState<AddExpenseForm>({
+    amount: '',
+    description: '',
+    month: '',
+    type: '',
+    year: ''
+  });
   const [warning, setWarning] = useState<string | null>(null);
+
+  const handleFormData = (e: any): void => {
+    const { name, value } = e.target;
+    setExpenseData({
+      ...expenseData,
+      [name]: value,
+    });
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const numericAmount = parseFloat(amount || "0");
-    if (numericAmount <= 0 || typeof amount !== "number") {
+    const numericAmount = parseFloat(expenseData.amount || "0");
+    if (numericAmount <= 0 || typeof expenseData.amount !== "number") {
       setWarning("invalid amount");
       return;
     }
-    console.log({ amount: numericAmount, type, description });
+    console.log({ amount: numericAmount, expenseData });
 
     // props.setOpen(false);
   };
@@ -43,7 +55,7 @@ const AddExpense: React.FC<ModalState> = (props) => {
       </div>
 
       <div className="p-4 h-max">
-        <form className="space-y-2">
+        <form className="space-y-2" >
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label
@@ -62,8 +74,8 @@ const AddExpense: React.FC<ModalState> = (props) => {
                   type="number"
                   step="0.1"
                   min="0"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
+                  value={expenseData.amount}
+                  onChange={handleFormData}
                   required
                   placeholder="0.0"
                   className="w-full pl-8 pr-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
@@ -80,8 +92,8 @@ const AddExpense: React.FC<ModalState> = (props) => {
                <select
                 id="type"
                 name="type"
-                value={type}
-                onChange={(e) => setType(e.target.value)}
+                value={expenseData.type}
+                onChange={handleFormData}
                 required
                 className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition appearance-none cursor-pointer"
               >
@@ -108,8 +120,8 @@ const AddExpense: React.FC<ModalState> = (props) => {
               <select
                 id="month"
                 name="month"
-                value={month}
-                onChange={(e) => setMonth(e.target.value)}
+                value={expenseData.month}
+                onChange={handleFormData}
                 required
                 className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition appearance-none cursor-pointer"
               >
@@ -140,8 +152,8 @@ const AddExpense: React.FC<ModalState> = (props) => {
                 id="year"
                 name="year"
                 type="number"
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
+                value={expenseData.year}
+                onChange={handleFormData}
                 required
                 placeholder="0000"
                 className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
@@ -158,19 +170,14 @@ const AddExpense: React.FC<ModalState> = (props) => {
           <textarea
             id="description"
             name="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={expenseData.description}
+            onChange={handleFormData}
             rows={2}
             placeholder="Add notes..."
             className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition resize-none"
           />
 
-          <button
-            type="submit"
-            className="flex-1 px-6 py-3 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-          >
-            Submit
-          </button>
+          <FormSubmitBtn func={() => {}}/>
         </form>
       </div>
     </Modal>

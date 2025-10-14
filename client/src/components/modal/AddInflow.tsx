@@ -1,13 +1,25 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import type { ModalState } from "../../types/Component";
+import type { InflowForm } from "../../types/FormsData";
+import FormSubmitBtn from "../buttons/FormSubmitBtn";
 
 const AddInflow: React.FC<ModalState> = (props) => {
-  const [year, setYear] = useState<string>("");
-  const [month, setMonth] = useState<string>("");
-  const [amount, setAmount] = useState<string>("0");
-  const [source, setSource] = useState<string>("Food");
-  const [description, setDescription] = useState<string>("");
+  const [inflowData, setInflowData] = useState<InflowForm>({
+    amount: '',
+    description: '',
+    month: '',
+    source: '',
+    year: ''
+  });
+
+  const handleFormData = (e: any): void => {
+    const { name, value } = e.target;
+    setInflowData({
+      ...inflowData,
+      [name]: value,
+    });
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +48,7 @@ const AddInflow: React.FC<ModalState> = (props) => {
       </div>
 
       <div className="p-4 h-max">
-        <form className="space-y-2">
+        <form className="space-y-2" >
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label
@@ -55,8 +67,8 @@ const AddInflow: React.FC<ModalState> = (props) => {
                   type="number"
                   step="0.1"
                   min="0"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
+                  value={inflowData.amount}
+                  onChange={handleFormData}
                   required
                   placeholder="0.0"
                   className="w-full pl-8 pr-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
@@ -73,8 +85,8 @@ const AddInflow: React.FC<ModalState> = (props) => {
               <select
                 id="source"
                 name="source"
-                value={source}
-                onChange={(e) => setSource(e.target.value)}
+                value={inflowData.source}
+                onChange={handleFormData}
                 required
                 className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition appearance-none cursor-pointer"
               >
@@ -100,8 +112,8 @@ const AddInflow: React.FC<ModalState> = (props) => {
               <select
                 id="month"
                 name="month"
-                value={month}
-                onChange={(e) => setMonth(e.target.value)}
+                value={inflowData.month}
+                onChange={handleFormData}
                 required
                 className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition appearance-none cursor-pointer"
               >
@@ -132,8 +144,8 @@ const AddInflow: React.FC<ModalState> = (props) => {
                 id="year"
                 name="year"
                 type="number"
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
+                value={inflowData.year}
+                onChange={handleFormData}
                 required
                 placeholder="0000"
                 className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
@@ -150,19 +162,14 @@ const AddInflow: React.FC<ModalState> = (props) => {
           <textarea
             id="description"
             name="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={inflowData.description}
+            onChange={handleFormData}
             rows={2}
             placeholder="Add notes..."
             className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition resize-none"
           />
 
-          <button
-            type="submit"
-            className="flex-1 px-6 py-3 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-          >
-            Submit
-          </button>
+          <FormSubmitBtn func={() => {}}/>
         </form>
       </div>
     </Modal>

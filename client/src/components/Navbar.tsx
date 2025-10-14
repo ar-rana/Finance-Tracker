@@ -3,6 +3,7 @@ import React, { useState } from "react";
 interface NavInterface {
   setExpenseOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setInflowOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setStocksOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Navbar: React.FC<NavInterface> = (props) => {
@@ -67,6 +68,15 @@ const Navbar: React.FC<NavInterface> = (props) => {
               >
                 <i className="fa fa-money text-green-600 text-center" />
                 {expanded && <span className="ml-3 text-gray-800 text-sm font-semibold">Add Inflow</span>}
+              </button>
+            </li>
+            <li className="mb-1">
+              <button 
+                onClick={() => props.setStocksOpen(prev => !prev)}
+                className="w-full text-left flex items-center h-10 px-4 py-2 hover:bg-green-50 rounded transition"
+              >
+                <i className="fa fa-bar-chart text-green-600 text-center" />
+                {expanded && <span className="ml-3 text-gray-800 text-sm font-semibold">Stock Screening</span>}
               </button>
             </li>
 
