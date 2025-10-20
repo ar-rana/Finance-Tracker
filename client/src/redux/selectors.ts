@@ -8,7 +8,18 @@ export const getAllModalStates = (state: RootState): ReduxModalState => {
         inflowOpen: state.modals.inflowOpen,
         settingsOpen: state.modals.settingsOpen,
         stocksOpen: state.modals.stocksOpen,
+        warningOpen: state.modals.warningOpen,
     }
 };
 
 export const getAwardModalState = (state: RootState) => state.modals.awardOpen;
+export const getExpenseModalState = (state: RootState) => state.modals.expenseOpen;
+export const getInflowModalState = (state: RootState) => state.modals.inflowOpen;
+export const getSettingsModalState = (state: RootState) => state.modals.settingsOpen;
+export const getStocksModalState = (state: RootState) => state.modals.stocksOpen;
+export const getWarningModalState = (state: RootState) => {
+    return {
+        warningOpen: state.modals.warningOpen,
+        warning: state.modals.warning,
+    }
+};

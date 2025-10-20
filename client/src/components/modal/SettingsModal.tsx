@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-import type { ModalState } from "../../types/Component";
 import FormSubmitBtn from "../buttons/FormSubmitBtn";
 import type { SettingsForm } from "../../types/FormsData";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { getSettingsModalState } from "../../redux/selectors";
+import { toggleSettings } from "../../redux/modalSlice";
 
-const SettingsModal: React.FC<ModalState> = (props) => {
+const SettingsModal: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const openState = useAppSelector(getSettingsModalState);
+
   const [settings, setSettings] = useState<SettingsForm>({
     start: "",
     end: "",
@@ -27,7 +32,7 @@ const SettingsModal: React.FC<ModalState> = (props) => {
     "Pie_Chart",
     "Scatter_Plot",
     "Line_Graph",
-    "Budget_Meter"
+    "Budget_Meter",
   ];
 
   return (
@@ -38,15 +43,15 @@ const SettingsModal: React.FC<ModalState> = (props) => {
           backgroundColor: "transparent",
         },
       }}
-      isOpen={props.open}
-      onRequestClose={() => props.setOpen(false)}
+      isOpen={openState}
+      onRequestClose={() => dispatch(toggleSettings())}
       ariaHideApp={false}
     >
       <div className="bg-gradient-to-r bg-gray-700 px-6 py-3 flex items-center justify-between">
         <h2 className="text-xl font-bold text-white">Settings</h2>
         <i
           className="font-bold fa fa-close text-white hover:text-gray-400"
-          onClick={() => props.setOpen((prev) => !prev)}
+          onClick={() => dispatch(toggleSettings())}
         />
       </div>
       <div className="p-4 h-max">
@@ -74,11 +79,13 @@ const SettingsModal: React.FC<ModalState> = (props) => {
                       type="checkbox"
                       value={graph}
                       checked={settings.graphs.includes(graph)}
-                      onChange={(e:any) => {
+                      onChange={(e: any) => {
                         const checked = e.target.checked;
                         setSettings((prev) => ({
                           ...prev,
-                          graphs: checked ? [...prev.graphs, graph] : prev.graphs.filter((g) => g !== graph),
+                          graphs: checked
+                            ? [...prev.graphs, graph]
+                            : prev.graphs.filter((g) => g !== graph),
                         }));
                       }}
                       onSelect={handleFormData}

@@ -1,15 +1,20 @@
 import React, { useState } from "react";
-import type { ModalState } from "../../types/Component";
 import Modal from "react-modal";
 import type { StocksFormData } from "../../types/FormsData";
 import FormSubmitBtn from "../buttons/FormSubmitBtn";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { getStocksModalState } from "../../redux/selectors";
+import { toggleStocks } from "../../redux/modalSlice";
 
-const StocksModal: React.FC<ModalState> = (props) => {
+const StocksModal: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const openState = useAppSelector(getStocksModalState);
+
   const [stockData, setStockData] = useState<StocksFormData>({
-    amount: '',
-    date: '',
-    description: '',
-    status: ''
+    amount: "",
+    date: "",
+    description: "",
+    status: "",
   });
 
   const handleFormData = (e: any): void => {
@@ -18,9 +23,8 @@ const StocksModal: React.FC<ModalState> = (props) => {
       ...stockData,
       [name]: value,
     });
-  }
+  };
 
-  if (!props.open) return null;
   return (
     <Modal
       className="z-101 fixed h-[45%] w-[50%] left-1/2 right-1/2 transform -translate-x-1/2 translate-y-1/2 shadow-2xl rounded-2xl overflow-auto bg-gray-800 border-2 border-white scrollbar-hide"
@@ -29,15 +33,15 @@ const StocksModal: React.FC<ModalState> = (props) => {
           backgroundColor: "transparent",
         },
       }}
-      isOpen={props.open}
-      onRequestClose={() => props.setOpen(false)}
+      isOpen={openState}
+      onRequestClose={() => dispatch(toggleStocks())}
       ariaHideApp={false}
     >
       <div className="bg-gradient-to-r bg-gray-700 px-6 py-3 flex items-center justify-between">
         <h2 className="text-xl font-bold text-white">Stocks Tracking</h2>
         <i
           className="font-bold fa fa-close text-white hover:text-gray-400"
-          onClick={() => props.setOpen((prev) => !prev)}
+          onClick={() => dispatch(toggleStocks())}
         />
       </div>
 
@@ -125,7 +129,7 @@ const StocksModal: React.FC<ModalState> = (props) => {
             className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition resize-none"
           />
 
-          <FormSubmitBtn func={() => {}}/>
+          <FormSubmitBtn func={() => {}} />
         </form>
       </div>
     </Modal>

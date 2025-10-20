@@ -8,4 +8,6 @@ export interface ReduxModalState {
     stocksOpen: boolean,
     settingsOpen: boolean,
     awardOpen: boolean,
+    warningOpen: boolean,
+    warning?: string,
 }

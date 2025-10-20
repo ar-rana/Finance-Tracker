@@ -6,7 +6,7 @@ export interface StocksFormData {
 }
 
 export interface AddExpenseForm {
-    amount: string | number; 
+    amount: string; 
     type: string;
     description: string;
     year: string;

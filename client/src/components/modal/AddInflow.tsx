@@ -1,16 +1,21 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-import type { ModalState } from "../../types/Component";
 import type { InflowForm } from "../../types/FormsData";
 import FormSubmitBtn from "../buttons/FormSubmitBtn";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { getInflowModalState } from "../../redux/selectors";
+import { toggleInflow } from "../../redux/modalSlice";
 
-const AddInflow: React.FC<ModalState> = (props) => {
+const AddInflow: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const openState = useAppSelector(getInflowModalState);
+
   const [inflowData, setInflowData] = useState<InflowForm>({
-    amount: '',
-    description: '',
-    month: '',
-    source: '',
-    year: ''
+    amount: "",
+    description: "",
+    month: "",
+    source: "",
+    year: "",
   });
 
   const handleFormData = (e: any): void => {
@@ -19,14 +24,13 @@ const AddInflow: React.FC<ModalState> = (props) => {
       ...inflowData,
       [name]: value,
     });
-  }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // props.setOpen(false);
   };
 
-  if (!props.open) return null;
   return (
     <Modal
       className="z-101 fixed h-[45%] w-[50%] left-1/2 right-1/2 transform -translate-x-1/2 translate-y-1/2 shadow-2xl rounded-2xl overflow-auto bg-gray-800 border-2 border-white scrollbar-hide"
@@ -35,20 +39,20 @@ const AddInflow: React.FC<ModalState> = (props) => {
           backgroundColor: "transparent",
         },
       }}
-      isOpen={props.open}
-      onRequestClose={() => props.setOpen(false)}
+      isOpen={openState}
+      onRequestClose={() => dispatch(toggleInflow())}
       ariaHideApp={false}
     >
       <div className="bg-gradient-to-r bg-gray-700 px-6 py-3 flex items-center justify-between">
         <h2 className="text-xl font-bold text-white">Add Money Inflow</h2>
         <i
           className="font-bold fa fa-close text-white hover:text-gray-400"
-          onClick={() => props.setOpen((prev) => !prev)}
+          onClick={() => dispatch(toggleInflow())}
         />
       </div>
 
       <div className="p-4 h-max">
-        <form className="space-y-2" >
+        <form className="space-y-2">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label
@@ -170,7 +174,7 @@ const AddInflow: React.FC<ModalState> = (props) => {
             className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition resize-none"
           />
 
-          <FormSubmitBtn func={() => {}}/>
+          <FormSubmitBtn func={() => {}} />
         </form>
       </div>
     </Modal>

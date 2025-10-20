@@ -1,21 +1,10 @@
 import React, { useState } from "react";
-import type { ReduxModalState } from "../types/SliceData";
-import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
-import { getAllModalStates } from "../redux/selectors";
-import { toggleAward } from "../redux/modalSlice";
+import { useAppDispatch } from "../hooks/reduxHooks";
+import { toggleAward, toggleExpense, toggleInflow, toggleSettings, toggleStocks } from "../redux/modalSlice";
 
-interface NavInterface {
-  setExpenseOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setInflowOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setStocksOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setAwardOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const Navbar: React.FC<NavInterface> = (props) => {
+const Navbar: React.FC = () => {
   const dispatch = useAppDispatch();
-  const allModalOpenState: ReduxModalState = useAppSelector(getAllModalStates);
-  
+
   const [expanded, setExpanded] = useState<boolean>(false);
   const [timeline, setTimeline] = useState<boolean>(false);
   
@@ -69,7 +58,7 @@ const Navbar: React.FC<NavInterface> = (props) => {
             </li>
             <li className="mb-1">
               <button 
-                onClick={() => props.setExpenseOpen(prev => !prev)}
+                onClick={() => dispatch(toggleExpense())}
                 className="w-full text-left flex items-center h-10 px-4 py-2 hover:bg-green-50 rounded transition"
               >
                 <i className="fa fa-credit-card text-green-600 text-center" />
@@ -78,7 +67,7 @@ const Navbar: React.FC<NavInterface> = (props) => {
             </li>
             <li className="mb-1">
               <button 
-                onClick={() => props.setInflowOpen(prev => !prev)}
+                onClick={() => dispatch(toggleInflow())}
                 className="w-full text-left flex items-center h-10 px-4 py-2 hover:bg-green-50 rounded transition"
               >
                 <i className="fa fa-money text-green-600 text-center" />
@@ -87,7 +76,7 @@ const Navbar: React.FC<NavInterface> = (props) => {
             </li>
             <li className="mb-1">
               <button 
-                onClick={() => props.setStocksOpen(prev => !prev)}
+                onClick={() => dispatch(toggleStocks())}
                 className="w-full text-left flex items-center h-10 px-4 py-2 hover:bg-green-50 rounded transition"
               >
                 <i className="fa fa-bar-chart text-green-600 text-center" />
@@ -96,7 +85,7 @@ const Navbar: React.FC<NavInterface> = (props) => {
             </li>
 
             <li className="mt-auto">
-              <button onClick={() => props.setSettingsOpen(prev => !prev)} className="w-full text-left flex items-center h-10 px-4 py-4 hover:bg-green-50 rounded transition">
+              <button onClick={() => dispatch(toggleSettings())} className="w-full text-left flex items-center h-10 px-4 py-4 hover:bg-green-50 rounded transition">
                 <i className="fa fa-cog text-green-600 text-center" />
                 {expanded && <span className="ml-3 text-gray-800 text-sm font-bold">Settings</span>}
               </button>

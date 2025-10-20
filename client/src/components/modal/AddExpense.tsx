@@ -1,18 +1,22 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-import type { ModalState } from "../../types/Component";
 import type { AddExpenseForm } from "../../types/FormsData";
 import FormSubmitBtn from "../buttons/FormSubmitBtn";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { getExpenseModalState } from "../../redux/selectors";
+import { toggleExpense, warn } from "../../redux/modalSlice";
 
-const AddExpense: React.FC<ModalState> = (props) => {
+const AddExpense: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const openState = useAppSelector(getExpenseModalState);
+
   const [expenseData, setExpenseData] = useState<AddExpenseForm>({
-    amount: '',
-    description: '',
-    month: '',
-    type: '',
-    year: ''
+    amount: "",
+    description: "",
+    month: "",
+    type: "",
+    year: "",
   });
-  const [warning, setWarning] = useState<string | null>(null);
 
   const handleFormData = (e: any): void => {
     const { name, value } = e.target;
@@ -20,20 +24,20 @@ const AddExpense: React.FC<ModalState> = (props) => {
       ...expenseData,
       [name]: value,
     });
-  }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const numericAmount = parseFloat(expenseData.amount || "0");
     if (numericAmount <= 0 || typeof expenseData.amount !== "number") {
-      setWarning("invalid amount");
+      dispatch(warn("Invalid Argument"));
       return;
     }
     console.log({ amount: numericAmount, expenseData });
 
     // props.setOpen(false);
   };
-  if (!props.open) return null;
+
   return (
     <Modal
       className="z-101 fixed h-[45%] w-[50%] left-1/2 right-1/2 transform -translate-x-1/2 translate-y-1/2 shadow-2xl rounded-2xl overflow-auto bg-gray-800 border-2 border-white scrollbar-hide"
@@ -42,20 +46,20 @@ const AddExpense: React.FC<ModalState> = (props) => {
           backgroundColor: "transparent",
         },
       }}
-      isOpen={props.open}
-      onRequestClose={() => props.setOpen(false)}
+      isOpen={openState}
+      onRequestClose={() => dispatch(toggleExpense())}
       ariaHideApp={false}
     >
       <div className="bg-gradient-to-r bg-gray-700 px-6 py-3 flex items-center justify-between">
         <h2 className="text-xl font-bold text-white">Add Expenses</h2>
         <i
           className="font-bold fa fa-close text-white hover:text-gray-400"
-          onClick={() => props.setOpen((prev) => !prev)}
+          onClick={() => dispatch(toggleExpense())}
         />
       </div>
 
       <div className="p-4 h-max">
-        <form className="space-y-2" >
+        <form className="space-y-2">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label
@@ -89,7 +93,7 @@ const AddExpense: React.FC<ModalState> = (props) => {
               >
                 Category
               </label>
-               <select
+              <select
                 id="type"
                 name="type"
                 value={expenseData.type}
@@ -177,7 +181,7 @@ const AddExpense: React.FC<ModalState> = (props) => {
             className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition resize-none"
           />
 
-          <FormSubmitBtn func={() => {}}/>
+          <FormSubmitBtn func={() => {}} />
         </form>
       </div>
     </Modal>

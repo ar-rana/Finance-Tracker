@@ -7,6 +7,8 @@ const initialState: ReduxModalState = {
     expenseOpen: false,
     settingsOpen: false,
     stocksOpen: false,
+    warningOpen: false,
+    warning: "",
 }
 
 export const modalSlice = createSlice({
@@ -28,12 +30,16 @@ export const modalSlice = createSlice({
         toggleStocks: (state) => {
             state.stocksOpen = !state.stocksOpen;
         },
-        // incByVal: (state, action: PayloadAction<number>) => {
-        //     state.value += action.payload
-        // },
+        closeWarn: (state) => {
+            state.warningOpen = false;
+        },
+        warn: (state, action: PayloadAction<string>) => {
+            state.warningOpen = !state.warningOpen;
+            state.warning = action.payload;
+        },
     } 
 })
 
-export const { toggleAward, toggleExpense, toggleInflow, toggleSettings, toggleStocks } = modalSlice.actions
+export const { toggleAward, toggleExpense, toggleInflow, toggleSettings, toggleStocks, warn, closeWarn } = modalSlice.actions
 
 export default modalSlice.reducer
