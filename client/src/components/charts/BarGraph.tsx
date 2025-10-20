@@ -54,6 +54,8 @@ const BarGraph:React.FC = () => {
         <YAxis />
         <Tooltip />
         <Legend />
+        <Bar dataKey="expenditure" stackId="stackA" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
+        <Bar dataKey="amount" stackId="stackA" fill="#82ca9d" activeBar={<Rectangle fill="gold" stroke="purple" />} />
         <Bar dataKey="expenditure" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
         <Bar dataKey="income" fill="#82ca9d" activeBar={<Rectangle fill="gold" stroke="purple" />} />
       </BarChart>

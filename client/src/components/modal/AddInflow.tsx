@@ -95,6 +95,7 @@ const AddInflow: React.FC<ModalState> = (props) => {
                 <option value="Gift">Gift</option>
                 <option value="Stocks">Stocks</option>
                 <option value="SIP_MF">SIP/MF</option>
+                <option value="Last_Month_Carry">Carry From Last Month</option>
                 <option value="Miscellaneous">Miscellaneous</option>
                 <option value="Other">Other</option>
               </select>
