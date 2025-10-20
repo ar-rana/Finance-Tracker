@@ -12,6 +12,7 @@ import ScatterPlot from "../components/charts/ScatterPlot";
 import DetailView from "../components/infoCards/DetailView";
 import SettingsModal from "../components/modal/SettingsModal";
 import AwardModal from "../components/modal/AwardModal";
+import BudgetMeter from "../components/charts/BudgetMeter";
 
 const DashBoard: React.FC = () => {
   const graphStyleClass = useRef<string>("w-full h-68 bg-transparent flex justify-center align-middle p-1.5");
@@ -49,6 +50,9 @@ const DashBoard: React.FC = () => {
           </div>
           <div className={graphStyleClass.current}>
             <ScatterPlot />
+          </div>
+          <div className={graphStyleClass.current}>
+            <BudgetMeter />
           </div>
         </div>
         <div className="flex flex-col">

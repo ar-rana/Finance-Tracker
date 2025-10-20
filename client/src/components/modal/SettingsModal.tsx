@@ -27,6 +27,7 @@ const SettingsModal: React.FC<ModalState> = (props) => {
     "Pie_Chart",
     "Scatter_Plot",
     "Line_Graph",
+    "Budget_Meter"
   ];
 
   return (
