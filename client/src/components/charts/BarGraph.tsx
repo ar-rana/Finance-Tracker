@@ -1,6 +1,6 @@
 import React from 'react';
 import { BarChart, Bar, Rectangle, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import type { MonthlyChart } from '../../types/GraphData';
+import type { MonthlyChart } from '../../types/APIData';
 
 const data: MonthlyChart[] = [
   {

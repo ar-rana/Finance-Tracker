@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { Slices, type ReduxModalState } from "../types/SliceData";
+import { Slices, type ReduxModalState } from "../types/ReduxData";
 
 const initialState: ReduxModalState = {
     awardOpen: false,

@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import modalSlice from "./redux/modalSlice";
+import modalReducer from "./redux/modalSlice";
+import settingsReducer from "./redux/settingsSlice";
 
 const rootReducer = combineReducers({
-    modals: modalSlice 
+    modals: modalReducer,
+    settings: settingsReducer,
 })
 
 // now my reduxt state will lool like

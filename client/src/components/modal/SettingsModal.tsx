@@ -5,6 +5,8 @@ import type { SettingsForm } from "../../types/FormsData";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { getSettingsModalState } from "../../redux/selectors";
 import { toggleSettings } from "../../redux/modalSlice";
+import { allSettings, setGraphs } from "../../redux/settingsSlice";
+import { Graphs } from "../../types/Component";
 
 const SettingsModal: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -14,7 +16,7 @@ const SettingsModal: React.FC = () => {
     start: "",
     end: "",
     budget: "",
-    graphs: ["Bar_Graphs", "Radar_Chart", "Pie_Chart"],
+    graphs: ["Bar_Graphs", "Radar_Chart", "Pie_Chart", "Hollow_Pie_Chart", "Line_Graph", "Scatter_Plot", "Budget_Meter"],
   });
 
   const handleFormData = (e: any): void => {
@@ -23,17 +25,11 @@ const SettingsModal: React.FC = () => {
       ...settings,
       [name]: value,
     });
+    dispatch(allSettings(settings));
+    console.log(settings);
   };
 
-  const graphs = [
-    "Bar_Graphs",
-    "Radar_Chart",
-    "Hollow_Pie_Chart",
-    "Pie_Chart",
-    "Scatter_Plot",
-    "Line_Graph",
-    "Budget_Meter",
-  ];
+  const graphs = Object.values(Graphs);
 
   return (
     <Modal
@@ -65,8 +61,11 @@ const SettingsModal: React.FC = () => {
                 Graph preference
               </label>
               <div className="grid sm:grid-cols-3 grid-cols-1 gap-2 w-full">
-                {graphs.map((graph) => (
-                  <div className="flex w-full items-center justify-between align-middle bg-gray-600 px-2 rounded-lg">
+                {graphs.map((graph, i) => (
+                  <div
+                    key={i}
+                    className="flex w-full items-center justify-between align-middle bg-gray-600 px-2 rounded-lg"
+                  >
                     <label
                       htmlFor={graph}
                       className="py-1 px-1 text-sm font-medium text-white w-full cursor-pointer"
@@ -81,12 +80,14 @@ const SettingsModal: React.FC = () => {
                       checked={settings.graphs.includes(graph)}
                       onChange={(e: any) => {
                         const checked = e.target.checked;
-                        setSettings((prev) => ({
-                          ...prev,
-                          graphs: checked
-                            ? [...prev.graphs, graph]
-                            : prev.graphs.filter((g) => g !== graph),
-                        }));
+                        const newGraphs = checked
+                          ? [...settings.graphs, graph]
+                          : settings.graphs.filter((g) => g !== graph);
+                        setSettings({
+                          ...settings,
+                          graphs: newGraphs,
+                        });
+                        dispatch(setGraphs(newGraphs));
                       }}
                       onSelect={handleFormData}
                       className="w-4 h-4 text-white bg-gray-600 border-gray-300 rounded-md focus:ring-blue-400 focus:ring-1"
@@ -109,7 +110,7 @@ const SettingsModal: React.FC = () => {
                 id="budget"
                 name="budget"
                 type="number"
-                value={""}
+                value={settings.budget}
                 onChange={handleFormData}
                 placeholder="Set a budget limit"
                 className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
@@ -132,7 +133,7 @@ const SettingsModal: React.FC = () => {
                 id="start"
                 name="start"
                 type="date"
-                value={""}
+                value={settings.start}
                 onChange={handleFormData}
                 className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               />
@@ -148,7 +149,7 @@ const SettingsModal: React.FC = () => {
                 id="end"
                 name="end"
                 type="date"
-                value={""}
+                value={settings.end}
                 onChange={handleFormData}
                 className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               />

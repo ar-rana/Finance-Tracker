@@ -1,5 +1,6 @@
 import type { RootState } from "../store";
-import type { ReduxModalState } from "../types/SliceData";
+import type { SettingsForm } from "../types/FormsData";
+import type { ReduxModalState } from "../types/ReduxData";
 
 export const getAllModalStates = (state: RootState): ReduxModalState => {
     return {
@@ -23,3 +24,5 @@ export const getWarningModalState = (state: RootState) => {
         warning: state.modals.warning,
     }
 };
+
+export const getAllSettingData = (state: RootState): SettingsForm => state.settings.settings;

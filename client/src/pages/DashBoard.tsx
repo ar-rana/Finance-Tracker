@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Navbar from "../components/Navbar";
 import AddExpense from "../components/modal/AddExpense";
 import AddInflow from "../components/modal/AddInflow";
@@ -13,42 +13,70 @@ import DetailView from "../components/infoCards/DetailView";
 import SettingsModal from "../components/modal/SettingsModal";
 import AwardModal from "../components/modal/AwardModal";
 import BudgetMeter from "../components/charts/BudgetMeter";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
+import { getAllSettingData } from "../redux/selectors";
+import { Graphs } from "../types/Component";
 
 const DashBoard: React.FC = () => {
   const graphStyleClass = useRef<string>("w-full h-68 bg-transparent flex justify-center align-middle p-1.5");
 
+  const settings = useAppSelector(getAllSettingData);
+
+  useEffect(() => {
+    console.log(settings.graphs.includes(Graphs.barGraph));
+  }, [settings]);
+
+  const settingCheck = (graph: string): boolean => {
+    return settings.graphs.includes(graph);
+  };
+
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gray-900 ml-12 overflow-x-hidden"> {/* ml-12 to accommodate for the navbar*/}
+      <div className="min-h-screen bg-gray-900 ml-12 overflow-x-hidden">
+        {" "}
+        {/* ml-12 to accommodate for the navbar*/}
         <AddExpense />
         <AddInflow />
         <StocksModal />
         <SettingsModal />
         <AwardModal />
-
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 bg-transparent pt-4">
-          <div className={graphStyleClass.current}>
-            <BarGraph />
-          </div>
-          <div className={graphStyleClass.current}>
-            <HollowPieChart />
-          </div>
-          <div className={graphStyleClass.current}>
-            <LineGraph />
-          </div>
-          <div className={graphStyleClass.current}>
-            <PieGraph />
-          </div>
-          <div className={graphStyleClass.current}>
-            <RadarGraph />
-          </div>
-          <div className={graphStyleClass.current}>
-            <ScatterPlot />
-          </div>
-          <div className={graphStyleClass.current}>
-            <BudgetMeter />
-          </div>
+          {settingCheck(Graphs.barGraph) && (
+            <div className={graphStyleClass.current}>
+              <BarGraph />
+            </div>
+          )}
+          {settingCheck(Graphs.hollowPieChart) && (
+            <div className={graphStyleClass.current}>
+              <HollowPieChart />
+            </div>
+          )}
+          {settingCheck(Graphs.lineGraph) && (
+            <div className={graphStyleClass.current}>
+              <LineGraph />
+            </div>
+          )}
+          {settingCheck(Graphs.pieChart) && (
+            <div className={graphStyleClass.current}>
+              <PieGraph />
+            </div>
+          )}
+          {settingCheck(Graphs.radarChart) && (
+            <div className={graphStyleClass.current}>
+              <RadarGraph />
+            </div>
+          )}
+          {settingCheck(Graphs.scatterPlot) && (
+            <div className={graphStyleClass.current}>
+              <ScatterPlot />
+            </div>
+          )}
+          {settingCheck(Graphs.budgetMeter) && (
+            <div className={graphStyleClass.current}>
+              <BudgetMeter />
+            </div>
+          )}
         </div>
         <div className="flex flex-col">
           <DetailView />
