@@ -2,24 +2,34 @@ import React, { useState } from "react";
 import Modal from "react-modal";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { getAwardModalState } from "../../redux/selectors";
-import { toggleAward } from "../../redux/modalSlice";
+import { toggleAward, warn } from "../../redux/modalSlice";
 
 const AwardModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const openState = useAppSelector(getAwardModalState);
 
-  const [award, setAward] = useState("Select Award");
-  const [open, setOpen] = useState(false);
+  const [award, setAward] = useState<string>("Select Award");
+  const [confirm, setConfirm] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const close = () => {
     setAward("Select Award");
     setOpen(false);
+    setConfirm(false);
     dispatch(toggleAward());
   };
 
+  const onSubmit = () => {
+    if (!confirm) {
+      dispatch(warn("Are you sure you deserve this award (。_。)"))
+      setConfirm(true);
+      return;
+    }
+  }
+
   return (
     <Modal
-      className="z-101 fixed h-auto w-[50%] left-1/2 right-1/2 transform -translate-x-1/2 top-1/5 shadow-2xl rounded-2xl overflow-auto bg-white border-2 border-black scrollbar-hide"
+      className="z-20 fixed h-auto w-[50%] left-1/2 right-1/2 transform -translate-x-1/2 top-1/4 shadow-2xl rounded-2xl overflow-auto bg-white border-2 border-black scrollbar-hide"
       style={{
         overlay: {
           backgroundColor: "transparent",
@@ -76,7 +86,7 @@ const AwardModal: React.FC = () => {
         </div>
       </div>
       <div className="px-6 mb-4">
-        <button className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+        <button onClick={() => onSubmit()} className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
           I deserve this Award
         </button>
       </div>

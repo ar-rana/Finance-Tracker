@@ -10,14 +10,14 @@ const WarningModal: React.FC = () => {
 
   return (
     <Modal
-      className="z-101 fixed w-[30%] left-1/2 right-1/2 top-1/3 transform -translate-x-1/2 shadow-2xl rounded-2xl overflow-auto bg-white border-2 border-black scrollbar-hide"
+      className="z-50 fixed w-[30%] left-1/2 right-1/2 top-1/5 transform -translate-x-1/2 shadow-2xl rounded-2xl overflow-auto bg-white border-2 border-black scrollbar-hide"
       style={{
         overlay: {
           backgroundColor: "transparent",
         },
       }}
       isOpen={warningOpen}
-      onRequestClose={() => {}}
+      onRequestClose={() => dispatch(closeWarn())}
       ariaHideApp={false}
     >
       <div className="bg-gradient-to-r bg-red-400 px-6 py-2 flex items-center justify-between">
