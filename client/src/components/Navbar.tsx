@@ -5,6 +5,7 @@ interface NavInterface {
   setInflowOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setStocksOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setAwardOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Navbar: React.FC<NavInterface> = (props) => {
@@ -35,10 +36,11 @@ const Navbar: React.FC<NavInterface> = (props) => {
           <ul className="flex flex-col h-full">
             <li className="mb-1">
               <button
+                onClick={() => props.setAwardOpen(prev => !prev)}
                 className="w-full text-left flex items-center h-10 px-4 py-2 hover:bg-green-50 rounded transition"
               >
-                <i className="fa fa-pie-chart text-green-600 text-center" />
-                {expanded && <span className="ml-3 text-gray-800 text-sm font-semibold">Analytics</span>}
+                <i className="fa fa-trophy text-green-600 text-center" />
+                {expanded && <span className="ml-3 text-gray-800 text-sm font-semibold">Awards</span>}
               </button>
             </li>
             <li className="mb-1 flex flex-col">
