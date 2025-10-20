@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import type { ReduxModalState } from "../types/SliceData";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
+import { getAllModalStates } from "../redux/selectors";
+import { toggleAward } from "../redux/modalSlice";
 
 interface NavInterface {
   setExpenseOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -9,6 +13,9 @@ interface NavInterface {
 }
 
 const Navbar: React.FC<NavInterface> = (props) => {
+  const dispatch = useAppDispatch();
+  const allModalOpenState: ReduxModalState = useAppSelector(getAllModalStates);
+  
   const [expanded, setExpanded] = useState<boolean>(false);
   const [timeline, setTimeline] = useState<boolean>(false);
   
@@ -36,7 +43,7 @@ const Navbar: React.FC<NavInterface> = (props) => {
           <ul className="flex flex-col h-full">
             <li className="mb-1">
               <button
-                onClick={() => props.setAwardOpen(prev => !prev)}
+                onClick={() => dispatch(toggleAward())}
                 className="w-full text-left flex items-center h-10 px-4 py-2 hover:bg-green-50 rounded transition"
               >
                 <i className="fa fa-trophy text-green-600 text-center" />

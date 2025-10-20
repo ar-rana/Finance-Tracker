@@ -1,10 +1,21 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-import type { ModalState } from "../../types/Component";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { getAwardModalState } from "../../redux/selectors";
+import { toggleAward } from "../../redux/modalSlice";
 
-const AwardModal: React.FC<ModalState> = (props) => {
+const AwardModal: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const openState = useAppSelector(getAwardModalState);
+
   const [award, setAward] = useState("Select Award");
   const [open, setOpen] = useState(false);
+
+  const close = () => {
+    setAward("Select Award");
+    setOpen(false);
+    dispatch(toggleAward());
+  };
 
   return (
     <Modal
@@ -14,19 +25,15 @@ const AwardModal: React.FC<ModalState> = (props) => {
           backgroundColor: "transparent",
         },
       }}
-      isOpen={props.open}
-      onRequestClose={() => {
-        setAward("Select Award");
-        setOpen(false);
-        props.setOpen(false);
-      }}
+      isOpen={openState}
+      onRequestClose={() => close()}
       ariaHideApp={false}
     >
       <div className="bg-gradient-to-r bg-yellow-300 px-6 py-3 flex items-center justify-between">
         <h2 className="text-2xl font-bold text-black">Awards</h2>
         <i
           className="font-bold fa fa-close text-white hover:text-gray-400"
-          onClick={() => props.setOpen((prev) => !prev)}
+          onClick={() => close()}
         />
       </div>
       <div className="px-6 py-2">

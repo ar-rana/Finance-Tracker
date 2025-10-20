@@ -13,9 +13,14 @@ import DetailView from "../components/infoCards/DetailView";
 import SettingsModal from "../components/modal/SettingsModal";
 import AwardModal from "../components/modal/AwardModal";
 import BudgetMeter from "../components/charts/BudgetMeter";
+import { useDispatch } from "react-redux";
+import { getAllModalStates } from "../redux/selectors";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
+import type { ReduxModalState } from "../types/SliceData";
 
 const DashBoard: React.FC = () => {
   const graphStyleClass = useRef<string>("w-full h-68 bg-transparent flex justify-center align-middle p-1.5");
+
   const [expenseOpen, setExpenseOpen] = useState<boolean>(false);
   const [inflowOpen, setInflowOpen] = useState<boolean>(false);
   const [stocksOpen, setStocksOpen] = useState<boolean>(false);
@@ -30,7 +35,7 @@ const DashBoard: React.FC = () => {
         <AddInflow open={inflowOpen} setOpen={setInflowOpen} />
         <StocksModal open={stocksOpen} setOpen={setStocksOpen} />
         <SettingsModal open={settingsOpen} setOpen={setSetttingsOpen} />
-        <AwardModal open={awardOpen} setOpen={setAwardOpen} />
+        <AwardModal />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 bg-transparent pt-4">
           <div className={graphStyleClass.current}>
