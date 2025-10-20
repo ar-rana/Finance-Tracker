@@ -6,7 +6,7 @@ export interface StocksFormData {
 }
 
 export interface AddExpenseForm {
-    amount: string;
+    amount: string | number; 
     type: string;
     description: string;
     year: string;
@@ -14,9 +14,16 @@ export interface AddExpenseForm {
 }
 
 export interface InflowForm {
-    amount: string;
+    amount: string | number;
     source: string;
     description: string;
     year: string;
     month: string;
+}
+
+export interface SettingsForm {
+    end: string;
+    start: string;
+    budget: string;
+    graphs: string[];
 }

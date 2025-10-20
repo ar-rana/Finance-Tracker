@@ -43,13 +43,14 @@ const Login: React.FC = () => {
 
           {/* OAuth buttons */}
           <div className="space-y-3 mb-4">
-            <button
+            <a
               type="button"
+              href="/dashboard"
               className="w-full flex items-center justify-center gap-3 py-2 rounded-md bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-sm hover:brightness-95 transition transform hover:-translate-y-0.5"
             >
               <i className="fa fa-google" aria-hidden="true"></i>
               Continue with Google
-            </button>
+            </a>
           </div>
 
           <div className="flex items-center my-4">
