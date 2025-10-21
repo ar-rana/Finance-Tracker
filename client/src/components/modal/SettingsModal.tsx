@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-import FormSubmitBtn from "../buttons/FormSubmitBtn";
+import FormSubmitBtn from "../helpers/FormSubmitBtn";
 import type { SettingsForm } from "../../types/FormsData";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { getSettingsModalState } from "../../redux/selectors";
 import { toggleSettings } from "../../redux/modalSlice";
 import { allSettings, setGraphs } from "../../redux/settingsSlice";
 import { Graphs } from "../../types/Component";
+import FormHeader from "../helpers/FormHeader";
+import useDebounce from "../../hooks/useDebounce";
 
 const SettingsModal: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -19,14 +21,14 @@ const SettingsModal: React.FC = () => {
     graphs: ["Bar_Graphs", "Radar_Chart", "Pie_Chart", "Hollow_Pie_Chart", "Line_Graph", "Scatter_Plot", "Budget_Meter"],
   });
 
+  const updateAllSettings = useDebounce({ timer: 500, thunk: allSettings, payload: settings })
+
   const handleFormData = (e: any): void => {
     const { name, value } = e.target;
     setSettings({
       ...settings,
       [name]: value,
-    });
-    dispatch(allSettings(settings));
-    console.log(settings);
+    });    
   };
 
   const graphs = Object.values(Graphs);
@@ -43,13 +45,8 @@ const SettingsModal: React.FC = () => {
       onRequestClose={() => dispatch(toggleSettings())}
       ariaHideApp={false}
     >
-      <div className="bg-gradient-to-r bg-gray-700 px-6 py-3 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-white">Settings</h2>
-        <i
-          className="font-bold fa fa-close text-white hover:text-gray-400"
-          onClick={() => dispatch(toggleSettings())}
-        />
-      </div>
+      <FormHeader thunk={toggleSettings} heading="Settings"/>
+      
       <div className="p-4 h-max">
         <form className="space-y-2">
           <div className="mb-6">

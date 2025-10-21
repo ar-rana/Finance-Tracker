@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import type { StocksFormData } from "../../types/FormsData";
-import FormSubmitBtn from "../buttons/FormSubmitBtn";
+import FormSubmitBtn from "../helpers/FormSubmitBtn";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { getStocksModalState } from "../../redux/selectors";
 import { toggleStocks } from "../../redux/modalSlice";
+import FormHeader from "../helpers/FormHeader";
 
 const StocksModal: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -37,13 +38,7 @@ const StocksModal: React.FC = () => {
       onRequestClose={() => dispatch(toggleStocks())}
       ariaHideApp={false}
     >
-      <div className="bg-gradient-to-r bg-gray-700 px-6 py-3 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-white">Stocks Tracking</h2>
-        <i
-          className="font-bold fa fa-close text-white hover:text-gray-400"
-          onClick={() => dispatch(toggleStocks())}
-        />
-      </div>
+      <FormHeader thunk={toggleStocks} heading="Stocks Tracking"/>
 
       <div className="p-4 h-max">
         <form className="space-y-2">

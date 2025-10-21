@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import type { AddExpenseForm } from "../../types/FormsData";
-import FormSubmitBtn from "../buttons/FormSubmitBtn";
+import FormSubmitBtn from "../helpers/FormSubmitBtn";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { getExpenseModalState } from "../../redux/selectors";
 import { toggleExpense, warn } from "../../redux/modalSlice";
+import FormHeader from "../helpers/FormHeader";
 
 const AddExpense: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -50,13 +51,7 @@ const AddExpense: React.FC = () => {
       onRequestClose={() => dispatch(toggleExpense())}
       ariaHideApp={false}
     >
-      <div className="bg-gradient-to-r bg-gray-700 px-6 py-3 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-white">Add Expenses</h2>
-        <i
-          className="font-bold fa fa-close text-white hover:text-gray-400"
-          onClick={() => dispatch(toggleExpense())}
-        />
-      </div>
+      <FormHeader thunk={toggleExpense} heading="Add Expenses"/>
 
       <div className="p-4 h-max">
         <form className="space-y-2">

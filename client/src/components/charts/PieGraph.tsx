@@ -1,12 +1,12 @@
-import { Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
 const data01 = [
-  { name: 'Group A', value: 400 },
-  { name: 'Group B', value: 300 },
-  { name: 'Group C', value: 300 },
-  { name: 'Group D', value: 200 },
-  { name: 'Group E', value: 278 },
-  { name: 'Group F', value: 189 },
+  { name: 'Group A', value: 4000 },
+  { name: 'Group B', value: 3000 },
+  { name: 'Group C', value: 3000 },
+  { name: 'Group D', value: 2000 },
+  { name: 'Group E', value: 2708 },
+  { name: 'Group F', value: 1890 },
 ];
 
 const PieGraph = () => {
@@ -17,10 +17,21 @@ const PieGraph = () => {
           dataKey="value"
           isAnimationActive={false}
           data={data01}
-          cx="50%"
+          cx="73%"
           cy="50%"
-          outerRadius={80}
-          fill="violet"
+          outerRadius={55}
+          fill="#82ca9d"
+          // label={{ position: 'inside' }}
+          label
+        />
+        <Pie
+          dataKey="value"
+          isAnimationActive={false}
+          data={data01}
+          cx="27%"
+          cy="50%"
+          outerRadius={55}
+          fill="#8884d8"
           label
         />
         <Tooltip />

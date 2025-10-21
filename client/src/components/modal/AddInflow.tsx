@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import type { InflowForm } from "../../types/FormsData";
-import FormSubmitBtn from "../buttons/FormSubmitBtn";
+import FormSubmitBtn from "../helpers/FormSubmitBtn";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { getInflowModalState } from "../../redux/selectors";
 import { toggleInflow } from "../../redux/modalSlice";
+import FormHeader from "../helpers/FormHeader";
 
 const AddInflow: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -43,13 +44,7 @@ const AddInflow: React.FC = () => {
       onRequestClose={() => dispatch(toggleInflow())}
       ariaHideApp={false}
     >
-      <div className="bg-gradient-to-r bg-gray-700 px-6 py-3 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-white">Add Money Inflow</h2>
-        <i
-          className="font-bold fa fa-close text-white hover:text-gray-400"
-          onClick={() => dispatch(toggleInflow())}
-        />
-      </div>
+      <FormHeader thunk={toggleInflow} heading="Add Money Inflow"/>
 
       <div className="p-4 h-max">
         <form className="space-y-2">

@@ -7,13 +7,20 @@ export interface ModalState {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export interface WarningState extends ModalState {
-  warning: string;
-  setWarning: React.Dispatch<React.SetStateAction<string>>;
-}
-
 export interface FormButton {
   func: (...args: any[]) => void;
+}
+
+export interface FormHeaderState {
+  heading: string;
+  thunk: any;
+}
+
+export interface Debounce {
+  func?: any;
+  thunk?: any;
+  timer?: number; // milliseconds
+  payload?: any;
 }
 
 export const Graphs = {

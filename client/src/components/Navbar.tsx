@@ -80,7 +80,17 @@ const Navbar: React.FC = () => {
                 className="w-full text-left flex items-center h-10 px-4 py-2 hover:bg-green-50 rounded transition"
               >
                 <i className="fa fa-bar-chart text-green-600 text-center" />
-                {expanded && <span className="ml-3 text-gray-800 text-sm font-semibold">Stock Screening</span>}
+                {expanded && <span className="ml-3 text-gray-800 text-sm font-semibold">Investment Analysis</span>} 
+                {/* fetch all BSE & NSE stocks from somewhere */}
+              </button>
+            </li>
+            <li className="mb-1">
+              <button 
+                onClick={() => {}}
+                className="w-full text-left flex items-center h-10 px-4 py-2 hover:bg-green-50 rounded transition"
+              >
+                <i className="fa fa-wpexplorer text-green-600 text-center" />
+                {expanded && <span className="ml-3 text-gray-800 text-sm font-semibold">Returns Forecasting</span>}
               </button>
             </li>
 
