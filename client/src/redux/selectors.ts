@@ -10,10 +10,12 @@ export const getAllModalStates = (state: RootState): ReduxModalState => {
         settingsOpen: state.modals.settingsOpen,
         stocksOpen: state.modals.stocksOpen,
         warningOpen: state.modals.warningOpen,
+        analyticsOpen: state.modals.analyticsOpen,
     }
 };
 
 export const getAwardModalState = (state: RootState) => state.modals.awardOpen;
+export const getAnalyticsModalState = (state: RootState) => state.modals.analyticsOpen;
 export const getExpenseModalState = (state: RootState) => state.modals.expenseOpen;
 export const getInflowModalState = (state: RootState) => state.modals.inflowOpen;
 export const getSettingsModalState = (state: RootState) => state.modals.settingsOpen;

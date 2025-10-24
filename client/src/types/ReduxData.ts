@@ -6,13 +6,14 @@ export const Slices = {
 } 
 
 export interface ReduxModalState {
-    expenseOpen: boolean,
-    inflowOpen: boolean,
-    stocksOpen: boolean,
-    settingsOpen: boolean,
-    awardOpen: boolean,
-    warningOpen: boolean,
-    warning?: string,
+    expenseOpen: boolean;
+    inflowOpen: boolean;
+    stocksOpen: boolean;
+    settingsOpen: boolean;
+    awardOpen: boolean;
+    warningOpen: boolean;
+    analyticsOpen: boolean;
+    warning?: string;
 }
 
 export interface ReduxSettingState {

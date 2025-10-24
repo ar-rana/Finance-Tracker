@@ -17,7 +17,7 @@ export const settingsSlice = createSlice({
   reducers: {
     allSettings: (state, action: PayloadAction<SettingsForm>) => {
         state.settings = action.payload;
-        console.log(state.settings);
+        // console.log(state.settings);
     },
     setGraphs: (state, action: PayloadAction<string[]>) => {
       state.settings.graphs = action.payload;

@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 export interface AppContextState {
   setWarning: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -12,6 +14,13 @@ export interface FormButton {
 }
 
 export interface FormHeaderState {
+  heading: string;
+  thunk: any;
+}
+
+export interface DraggablePopupProps {
+  children: ReactNode;
+  isOpen: boolean;
   heading: string;
   thunk: any;
 }

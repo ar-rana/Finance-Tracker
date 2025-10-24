@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAppDispatch } from "../hooks/reduxHooks";
-import { toggleAward, toggleExpense, toggleInflow, toggleSettings, toggleStocks } from "../redux/modalSlice";
+import { toggleAnalytics, toggleAward, toggleExpense, toggleInflow, toggleSettings, toggleStocks } from "../redux/modalSlice";
 
 const Navbar: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -86,7 +86,7 @@ const Navbar: React.FC = () => {
             </li>
             <li className="mb-1">
               <button 
-                onClick={() => {}}
+                onClick={() => dispatch(toggleAnalytics())}
                 className="w-full text-left flex items-center h-10 px-4 py-2 hover:bg-green-50 rounded transition"
               >
                 <i className="fa fa-wpexplorer text-green-600 text-center" />
