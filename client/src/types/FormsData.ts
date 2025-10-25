@@ -27,3 +27,11 @@ export interface SettingsForm {
     budget: string;
     graphs: string[];
 }
+
+export interface AnalyticsFormState {
+    amount: number;
+    time: number;
+    period: number;
+    interest: string;
+    rate: number;
+}

@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import FormSubmitBtn from "../helpers/FormSubmitBtn";
 import type { SettingsForm } from "../../types/FormsData";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
-import { getSettingsModalState } from "../../redux/selectors";
+import { getAllSettingData, getSettingsModalState } from "../../redux/selectors";
 import { toggleSettings } from "../../redux/modalSlice";
 import { allSettings, setGraphs } from "../../redux/settingsSlice";
 import { Graphs } from "../../types/Component";
@@ -13,6 +13,7 @@ import useDebounce from "../../hooks/useDebounce";
 const SettingsModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const openState = useAppSelector(getSettingsModalState);
+  const globalsettings = useAppSelector(getAllSettingData);
 
   const [settings, setSettings] = useState<SettingsForm>({
     start: "",
@@ -30,6 +31,15 @@ const SettingsModal: React.FC = () => {
       [name]: value,
     });    
   };
+
+  useEffect(() => {
+    setSettings({
+      ...settings,
+      end: globalsettings.end,
+      start: globalsettings.start,
+    });
+  }, [globalsettings.start, globalsettings.end])
+
 
   const graphs = Object.values(Graphs);
 

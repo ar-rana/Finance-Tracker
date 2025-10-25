@@ -1,6 +1,7 @@
 import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
 const RADIAN = Math.PI / 180;
+// total = 152 (%)
 const chartData = [
   { name: "In_budget", value: 80, fill: "#82ca9d" },
   { name: "Near_budget", value: 20, fill: "#2C74B3" },

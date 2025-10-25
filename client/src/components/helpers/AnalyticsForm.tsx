@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import FormSubmitBtn from "./FormSubmitBtn";
+import type { AnalyticsFormState } from "../../types/FormsData";
 
 const AnalyticsForm: React.FC = () => {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<AnalyticsFormState>({
     amount: 0,
     time: 0,
     period: 1,
@@ -83,14 +83,14 @@ const AnalyticsForm: React.FC = () => {
             </div>
           </div>
         </div>
-        <div>
-          <label
-            htmlFor="rate"
-            className="block text-sm font-medium text-white mb-2"
-          >
-            Interest Rate
-          </label>
-          <div className="relative">
+        <div className="flex justify-between items-center gap-2">
+          <div className="flex-1 relative">
+            <label
+              htmlFor="rate"
+              className="block text-sm font-medium text-white mb-2"
+            >
+              Interest Rate
+            </label>
             <input
               id="rate"
               name="rate"
@@ -103,33 +103,47 @@ const AnalyticsForm: React.FC = () => {
               placeholder="0"
               className="flex-3 w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
             />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pr-3">
+            <span className="absolute right-3 top-[68%] -translate-y-1/2 text-gray-500 pr-3">
               %
             </span>
+          </div>
+          <div className="flex-1">
+            <label
+              htmlFor="interest"
+              className="block text-sm font-medium text-white mb-2"
+            >
+              Interest
+            </label>
+            <select
+              id="interest"
+              name="interest"
+              value={form.interest}
+              onChange={handleForm}
+              required
+              className="flex-2 w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition appearance-none cursor-pointer"
+            >
+              <option value="compound">compound</option>
+              <option value="simple">simple</option>
+            </select>
           </div>
         </div>
         <div>
           <label
-            htmlFor="interest"
+            htmlFor="result"
             className="block text-sm font-medium text-white mb-2"
           >
-            Interest
+            Result
           </label>
-          <select
-            id="interest"
-            name="interest"
-            value={form.interest}
-            onChange={handleForm}
-            required
-            className="flex-2 w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition appearance-none cursor-pointer"
-          >
-            <option value="compound">compound</option>
-            <option value="simple">simple</option>
-          </select>
+          <input
+            id="result"
+            name="result"
+            type="text"
+            value={""}
+            // placeholder="result"
+            disabled
+            className="cursor-not-allowed flex-3 w-full px-3 py-2.5 rounded-lg bg-gray-300 text-gray-900 border border-gray-300 focus:outline-none focus:border-transparent"
+          />
         </div>
-      </div>
-      <div className="py-4">
-        <FormSubmitBtn func={() => {}} />
       </div>
     </form>
   );

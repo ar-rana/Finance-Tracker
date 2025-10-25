@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { Slices, type ReduxSettingState } from "../types/ReduxData";
+import { Slices, type ReduxSettingState, type SettingsDate } from "../types/ReduxData";
 import type { SettingsForm } from "../types/FormsData";
 
 const initialState: ReduxSettingState = {
@@ -21,10 +21,14 @@ export const settingsSlice = createSlice({
     },
     setGraphs: (state, action: PayloadAction<string[]>) => {
       state.settings.graphs = action.payload;
-    }
+    },
+    setDates: (state, action: PayloadAction<SettingsDate>) => {
+      state.settings.start = action.payload.start;
+      state.settings.end = action.payload.end;
+    },
   },
 });
 
-export const { allSettings, setGraphs } = settingsSlice.actions;
+export const { allSettings, setGraphs, setDates } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

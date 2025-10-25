@@ -1,12 +1,36 @@
 import React, { useState } from "react";
 import { useAppDispatch } from "../hooks/reduxHooks";
 import { toggleAnalytics, toggleAward, toggleExpense, toggleInflow, toggleSettings, toggleStocks } from "../redux/modalSlice";
+import { setDates } from "../redux/settingsSlice";
 
 const Navbar: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const [expanded, setExpanded] = useState<boolean>(false);
   const [timeline, setTimeline] = useState<boolean>(false);
+
+  const handleGlobalTimeline = (timeline: string) => {
+    let start;
+    let end: Date | string = new Date();
+    if (timeline === "week") {
+      const day = end.getDay();
+      start = new Date();
+      start.setDate(end.getDate() - day);
+    } else if (timeline === "month") {
+      start = new Date(end.getFullYear(), end.getMonth(), 1);
+    } else if (timeline === "year") {
+      start = new Date(end.getFullYear(), 0, 1);
+    } else {
+      dispatch(toggleSettings());
+      return;
+    }
+    const pad = (n: number) => String(n).padStart(2, "0");
+    start = `${start.getFullYear()}-${pad(start.getMonth() + 1)}-${pad(start.getDate())}`;
+    end = `${end.getFullYear()}-${pad(end.getMonth() + 1)}-${pad(end.getDate())}`;
+    console.log("start: ", start);
+    console.log("end: ", end);
+    dispatch(setDates({ start, end }));
+  }
   
   return (
     <div className="flex h-screen bg-transparent max-h-screen fixed z-100">
@@ -48,10 +72,10 @@ const Navbar: React.FC = () => {
               </button>
               {timeline && (
                   <ul className="flex flex-col text-sm">
-                    <li className="text-left flex items-center ml-9 px-2 font-mono hover:bg-gray-100 cursor-pointer">This Week</li>
-                    <li className="text-left flex items-center ml-9 px-2 font-mono hover:bg-gray-100 cursor-pointer">This Month</li>
-                    <li className="text-left flex items-center ml-9 px-2 font-mono hover:bg-gray-100 cursor-pointer">This Year</li>
-                    <li className="text-left flex items-center ml-9 px-2 font-mono hover:bg-gray-100 cursor-pointer">Custome</li>
+                    <li onClick={() => handleGlobalTimeline("week")} className="text-left flex items-center ml-9 px-2 font-mono hover:bg-gray-100 cursor-pointer">This Week</li>
+                    <li onClick={() => handleGlobalTimeline("month")} className="text-left flex items-center ml-9 px-2 font-mono hover:bg-gray-100 cursor-pointer">This Month</li>
+                    <li onClick={() => handleGlobalTimeline("year")} className="text-left flex items-center ml-9 px-2 font-mono hover:bg-gray-100 cursor-pointer">This Year</li>
+                    <li onClick={() => handleGlobalTimeline("")} className="text-left flex items-center ml-9 px-2 font-mono hover:bg-gray-100 cursor-pointer">Custome</li>
                   </ul>
                 )
               }

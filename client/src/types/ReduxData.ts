@@ -19,3 +19,8 @@ export interface ReduxModalState {
 export interface ReduxSettingState {
     settings: SettingsForm,
 }
+
+export interface SettingsDate {
+    start: string;
+    end: string;
+}
