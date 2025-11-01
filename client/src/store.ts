@@ -2,6 +2,8 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import modalReducer from "./redux/modalSlice";
 import settingsReducer from "./redux/settingsSlice";
 
+// there is somr 'applyMiddleware' functionality in redux
+
 const rootReducer = combineReducers({
     modals: modalReducer,
     settings: settingsReducer,

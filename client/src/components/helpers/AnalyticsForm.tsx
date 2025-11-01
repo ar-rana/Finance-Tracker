@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import type { AnalyticsFormState } from "../../types/FormsData";
+import useDebounce from "../../hooks/useDebounce";
 
 const AnalyticsForm: React.FC = () => {
   const [form, setForm] = useState<AnalyticsFormState>({
@@ -9,6 +10,7 @@ const AnalyticsForm: React.FC = () => {
     interest: "compound",
     rate: 0,
   });
+  const [result, setResult] = useState<number>(0.0);
 
   const handleForm = (e: any) => {
     const { name, value } = e.target;
@@ -17,6 +19,35 @@ const AnalyticsForm: React.FC = () => {
       [name]: value,
     }));
   };
+
+  const handleAnalysis = () => {
+    const principal = Number(form.amount);
+    const rate = Number(form.rate);
+    const period = Number(form.period);
+    const time = Number(form.time);
+    console.log(
+      `P: ${principal}, R: ${rate}, period: ${period}, time: ${time}`
+    );
+    let T = time / period;
+    console.log("years: ", T);
+
+    let result: number;
+    try {
+      if (form.interest === "compound") {
+        const CI = principal * Math.pow(1 + ((rate / 100) / period), period * T);
+        result = CI - principal;
+      } else {
+        const SI = (principal * rate * time) / 100;
+        result = SI; 
+      }
+      setResult(Number(result.toFixed(4)));
+    } catch (err) {
+      console.log("Invalid Input");
+      setResult(0.0);
+    }
+  };
+
+  const debounce = useDebounce({ func: handleAnalysis, timer: 700 });
 
   return (
     <form className="p-4">
@@ -78,7 +109,7 @@ const AnalyticsForm: React.FC = () => {
                 <option value="1">years</option>
                 <option value="12">months</option>
                 <option value="4">quarters</option>
-                <option value="2">half-year</option>
+                <option value="2">half-yearly</option>
               </select>
             </div>
           </div>
@@ -127,22 +158,41 @@ const AnalyticsForm: React.FC = () => {
             </select>
           </div>
         </div>
-        <div>
-          <label
-            htmlFor="result"
-            className="block text-sm font-medium text-white mb-2"
-          >
-            Result
-          </label>
-          <input
-            id="result"
-            name="result"
-            type="text"
-            value={""}
-            // placeholder="result"
-            disabled
-            className="cursor-not-allowed flex-3 w-full px-3 py-2.5 rounded-lg bg-gray-300 text-gray-900 border border-gray-300 focus:outline-none focus:border-transparent"
-          />
+        <div className="flex gap-2">
+          <div>
+            <label
+              htmlFor="result"
+              className="block text-sm font-medium text-white mb-2"
+            >
+              Returns
+            </label>
+            <input
+              id="result"
+              name="result"
+              type="number"
+              value={result}
+              // placeholder="result"
+              disabled
+              className="cursor-not-allowed flex-3 w-full px-3 py-2.5 rounded-lg bg-gray-300 text-gray-900 border border-gray-300 focus:outline-none focus:border-transparent"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="result"
+              className="block text-sm font-medium text-white mb-2"
+            >
+              Total Amount
+            </label>
+            <input
+              id="result"
+              name="result"
+              type="number"
+              value={Number(form.amount) + Number(result)}
+              // placeholder="result"
+              disabled
+              className="cursor-not-allowed flex-3 w-full px-3 py-2.5 rounded-lg bg-gray-300 text-gray-900 border border-gray-300 focus:outline-none focus:border-transparent"
+            />
+          </div>
         </div>
       </div>
     </form>

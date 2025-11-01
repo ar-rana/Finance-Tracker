@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import finup_bg from "../assets/finup_bg.png";
 import finup_logo from "../assets/finup_logo.jpg";
 import logo from "../assets/logo.png";
+import { useAppDispatch } from "../hooks/reduxHooks";
+import { warn } from "../redux/modalSlice";
 
 const Login: React.FC = () => {
+
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(warn("The backend is not connect, just click on 'Continue with Google' to proceed & review"));
+  }, [])
+  
   return (
     <div className="h-screen flex bg-gray-900 md:p-10 p-4">
         {/* Left Panel */}
