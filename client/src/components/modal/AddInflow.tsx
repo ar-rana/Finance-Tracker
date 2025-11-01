@@ -27,10 +27,10 @@ const AddInflow: React.FC = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // props.setOpen(false);
-  };
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   // props.setOpen(false);
+  // };
 
   return (
     <Modal

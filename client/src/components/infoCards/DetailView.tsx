@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import LatestEntry from "./LatestEntry";
 
 const DetailView: React.FC = () => {
-  const [entry, setEntry] = useState<any[]>([]);
-  const [filter, setFilter] = useState<any>();
+  // const [entry, setEntry] = useState<any[]>([]);
+  // const [filter, setFilter] = useState<any>();
 
   const a = 0;
   return (

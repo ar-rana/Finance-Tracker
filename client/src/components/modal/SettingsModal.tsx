@@ -22,7 +22,8 @@ const SettingsModal: React.FC = () => {
     graphs: ["Bar_Graphs", "Radar_Chart", "Pie_Chart", "Hollow_Pie_Chart", "Line_Graph", "Scatter_Plot", "Budget_Meter"],
   });
 
-  const updateAllSettings = useDebounce({ timer: 500, thunk: allSettings, payload: settings })
+  // const updateAllSettings = 
+  useDebounce({ timer: 500, thunk: allSettings, payload: settings })
 
   const handleFormData = (e: any): void => {
     const { name, value } = e.target;

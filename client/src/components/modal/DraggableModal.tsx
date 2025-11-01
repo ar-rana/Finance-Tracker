@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
-import { getAnalyticsModalState } from "../../redux/selectors";
+import { useAppDispatch } from "../../hooks/reduxHooks";
 import type { DraggablePopupProps } from "../../types/Component";
 
 interface coords {

@@ -47,7 +47,8 @@ const AnalyticsForm: React.FC = () => {
     }
   };
 
-  const debounce = useDebounce({ func: handleAnalysis, timer: 700 });
+  // const debounce = 
+  useDebounce({ func: handleAnalysis, timer: 700 });
 
   return (
     <form className="p-4">

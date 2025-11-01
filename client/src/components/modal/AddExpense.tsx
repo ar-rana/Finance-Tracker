@@ -4,7 +4,7 @@ import type { AddExpenseForm } from "../../types/FormsData";
 import FormSubmitBtn from "../helpers/FormSubmitBtn";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { getExpenseModalState } from "../../redux/selectors";
-import { toggleExpense, warn } from "../../redux/modalSlice";
+import { toggleExpense } from "../../redux/modalSlice";
 import FormHeader from "../helpers/FormHeader";
 
 const AddExpense: React.FC = () => {
@@ -27,17 +27,17 @@ const AddExpense: React.FC = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const numericAmount = parseFloat(expenseData.amount || "0");
-    if (numericAmount <= 0 || typeof expenseData.amount !== "number") {
-      dispatch(warn("Invalid Argument"));
-      return;
-    }
-    console.log({ amount: numericAmount, expenseData });
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   const numericAmount = parseFloat(expenseData.amount || "0");
+  //   if (numericAmount <= 0 || typeof expenseData.amount !== "number") {
+  //     dispatch(warn("Invalid Argument"));
+  //     return;
+  //   }
+  //   console.log({ amount: numericAmount, expenseData });
 
-    // props.setOpen(false);
-  };
+  //   // props.setOpen(false);
+  // };
 
   return (
     <Modal
