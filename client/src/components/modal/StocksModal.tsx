@@ -14,8 +14,10 @@ const StocksModal: React.FC = () => {
   const [stockData, setStockData] = useState<StocksFormData>({
     amount: "",
     date: "",
+    company: "",
     description: "",
     status: "",
+    quantity: 0,
   });
 
   const handleFormData = (e: any): void => {
@@ -38,7 +40,7 @@ const StocksModal: React.FC = () => {
       onRequestClose={() => dispatch(toggleStocks())}
       ariaHideApp={false}
     >
-      <FormHeader thunk={toggleStocks} heading="Stocks Tracking"/>
+      <FormHeader thunk={toggleStocks} heading="Stocks Tracking" />
 
       <div className="p-4 h-max">
         <form className="space-y-2">
@@ -89,23 +91,61 @@ const StocksModal: React.FC = () => {
 
           <div>
             <label
-              htmlFor="status"
+              htmlFor="company"
               className="block text-sm font-medium text-white mb-2"
             >
-              Sold/Bought
+              Company
             </label>
-            <select
-              id="status"
-              name="status"
-              value={stockData.status}
+            <input
+              id="company"
+              name="company"
+              value={stockData.company}
               onChange={handleFormData}
               required
-              className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition appearance-none cursor-pointer"
-            >
-              <option value="">Select</option>
-              <option value="Sold">Sold</option>
-              <option value="Bought">Bought</option>
-            </select>
+              className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+            />
+          </div>
+          <div className="flex justify-center items-center gap-4 ">
+            <div className="flex-1">
+              <label
+                htmlFor="quantity"
+                className="block text-sm font-medium text-white mb-2"
+              >
+                Quantity
+              </label>
+              <input
+                id="quantity"
+                name="quantity"
+                type="number"
+                min="0"
+                step="1"
+                value={stockData.quantity}
+                onChange={handleFormData}
+                required
+                className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+              />
+            </div>
+
+            <div className="flex-1">
+              <label
+                htmlFor="status"
+                className="block text-sm font-medium text-white mb-2"
+              >
+                Sold/Bought
+              </label>
+              <select
+                id="status"
+                name="status"
+                value={stockData.status}
+                onChange={handleFormData}
+                required
+                className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition appearance-none cursor-pointer"
+              >
+                <option value="">Select</option>
+                <option value="Sold">Sold</option>
+                <option value="Bought">Bought</option>
+              </select>
+            </div>
           </div>
 
           <label

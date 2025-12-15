@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  cosmos_db:
+    container_name: cosmos_finup
+    image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:latest
+    mem_limit: 2GB
+    ports:
+      - '8081:8081'
+      - '10251-10254'
+      - '10252:10252'
+      - '10253:10253'
+      - '10254:10254'
+    volumes:
+      - finup_local:/var/lib/cosmosdb
+    
+volumes:
+  finup_local: 

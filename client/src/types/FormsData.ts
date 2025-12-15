@@ -1,8 +1,10 @@
 export interface StocksFormData {
-    amount: string | number;
+    amount: string;
+    company: string;
     date: string;
     status: string;
     description: string;
+    quantity: number;
 }
 
 export interface AddExpenseForm {
