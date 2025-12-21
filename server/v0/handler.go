@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"v0/pkg"
+	service "v0/services"
 )
 
 func helloHandler(w http.ResponseWriter, r *http.Request) {
@@ -18,8 +20,7 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		log.Printf("Env Acessed: false")
 	}
-	fmt.Println("ENV_CHECK reached")
-	fmt.Fprint(w, message)
+	pkg.SendOK(w, message, "Server active and running")
 }
 
 func goodHandler(w http.ResponseWriter, r *http.Request) {
@@ -29,9 +30,23 @@ func goodHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		log.Printf("Env Acessed: false")
 	}
-	fmt.Println("ENV_CHECK reached")
-	fmt.Fprint(w, message)
-	fmt.Fprint(w, message)
+	pkg.SendOK(w, message, "Server active and running")
+}
+
+func DBConnectionCheckHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
+		result, err := service.DBConnectionCheck(w, r)
+		if err != nil {
+			pkg.SendERR(w, nil, err.Error())
+			return
+		}
+		pkg.SendOK(w, result, "DB Connection Checked")
+		return
+	default:
+		pkg.SendERR(w, nil, "method not allowed")
+		return
+	}
 }
 
 func main() {
@@ -43,6 +58,7 @@ func main() {
 
 	http.HandleFunc("/api/v0", helloHandler)
 	http.HandleFunc("/api/v0/good", goodHandler)
+	http.HandleFunc("/api/v0/db-connection-check", DBConnectionCheckHandler)
 	log.Printf("listening on localhost%s", listenAddr)
 	log.Fatal(http.ListenAndServe(listenAddr, nil))
 }
