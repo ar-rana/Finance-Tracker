@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"v0/models"
 	"v0/pkg"
 	service "v0/services"
@@ -220,19 +221,103 @@ func AwardHandler(w http.ResponseWriter, r *http.Request) {
 		pkg.SendOK(w, result, "Award removed successfully")
 		return
 	// case http.MethodGet:
-		// user := r.URL.Query().Get("user")
-		// if user == "" {
-		// 	pkg.SendERR(w, nil, "user is required")
-		// 	return
-		// }
+	// user := r.URL.Query().Get("user")
+	// if user == "" {
+	// 	pkg.SendERR(w, nil, "user is required")
+	// 	return
+	// }
 
-		// result, err := service.GetAllAwardsByUser(user)
-		// if err != nil {
-		// 	pkg.SendERR(w, nil, err.Error())
-		// 	return
-		// }
-		// pkg.SendOK(w, result, "Awards fetched successfully")
-		// return
+	// result, err := service.GetAllAwardsByUser(user)
+	// if err != nil {
+	// 	pkg.SendERR(w, nil, err.Error())
+	// 	return
+	// }
+	// pkg.SendOK(w, result, "Awards fetched successfully")
+	// return
+	default:
+		pkg.SendERR(w, nil, "method not allowed")
+		return
+	}
+}
+
+func UserHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
+		item, err := pkg.BodyParser[models.User](w, r)
+		if err != nil {
+			return
+		}
+
+		// Trim and check both username and password
+		item.Username = strings.TrimSpace(item.Username)
+		item.Password = strings.TrimSpace(item.Password)
+
+		if item.Username == "" || item.Password == "" {
+			pkg.SendERR(w, nil, "username and password are required")
+			return
+		}
+
+		result, err := service.CreateNewUser(item)
+		if err != nil {
+			pkg.SendERR(w, nil, err.Error())
+			return
+		}
+		pkg.SendOK(w, result, "User created successfully")
+		return
+	// case http.MethodDelete:
+	// 	id := r.URL.Query().Get("id")
+	// 	if id == "" {
+	// 		pkg.SendERR(w, nil, "id is required")
+	// 		return
+	// 	}
+	// 	result, err := service.RemoveUserItem(id)
+	// 	if err != nil {
+	// 		pkg.SendERR(w, nil, err.Error())
+	// 		return
+	// 	}
+	// 	pkg.SendOK(w, result, "User removed successfully")
+	// 	return
+	default:
+		pkg.SendERR(w, nil, "method not allowed")
+		return
+	}
+}
+
+func SettingsHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		user := r.URL.Query().Get("user")
+		user = strings.TrimSpace(user)
+		if user == "" {
+			pkg.SendERR(w, nil, "username is required")
+			return
+		}
+		result, err := service.GetUserSettings(user)
+		if err != nil {
+			pkg.SendERR(w, nil, err.Error())
+			return
+		}
+		pkg.SendOK(w, result, "Settings fetched successfully")
+		return
+	case http.MethodPut:
+		user := r.URL.Query().Get("user")
+		user = strings.TrimSpace(user)
+		if user == "" {
+			pkg.SendERR(w, nil, "username is required")
+			return
+		}
+
+		item, err := pkg.BodyParser[models.Settings](w, r)
+		if err != nil {
+			return
+		}
+		result, err := service.UpdateUserSettings(user, item)
+		if err != nil {
+			pkg.SendERR(w, nil, err.Error())
+			return
+		}
+		pkg.SendOK(w, result, "Settings updated successfully")
+		return
 	default:
 		pkg.SendERR(w, nil, "method not allowed")
 		return
@@ -260,6 +345,12 @@ func main() {
 
 	// AWARD
 	http.HandleFunc("/api/v0/award", AwardHandler)
+
+	// USER
+	http.HandleFunc("/api/v0/user", UserHandler)
+
+	// SETTINGS
+	http.HandleFunc("/api/v0/settings", SettingsHandler)
 
 	log.Printf("listening on localhost%s", listenAddr)
 	log.Fatal(http.ListenAndServe(listenAddr, nil))
