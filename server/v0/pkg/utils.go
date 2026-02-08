@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 	"v0/models"
 )
 
@@ -43,6 +44,11 @@ func ParseCosmosResponse(body io.ReadCloser) (map[string]any, error) {
 		return nil, err
 	}
 
+	// Handle empty body (e.g., Status 204 No Content)
+	if len(bodyBytes) == 0 {
+		return make(map[string]any), nil
+	}
+
 	// Parse as JSON
 	var result map[string]any
 	if err := json.Unmarshal(bodyBytes, &result); err != nil {
@@ -58,4 +64,30 @@ func ParseCosmosResponse(body io.ReadCloser) (map[string]any, error) {
 	}
 
 	return cleanResult, nil
+}
+
+func BodyParser[T any](w http.ResponseWriter, r *http.Request) (T, error) {
+	var item T
+	if err := json.NewDecoder(r.Body).Decode(&item); err != nil {
+		SendERR(w, nil, "Invalid request body")
+		return item, err
+	}
+	return item, nil
+}
+
+func ParseDate(dateStr string) (int, string, int, time.Time, error) {
+	// Support both / and - separators
+	normalizedDate := strings.ReplaceAll(dateStr, "-", "/")
+	t, err := time.Parse("02/01/2006", normalizedDate)
+	if err != nil {
+		return 0, "", 0, time.Time{}, err
+	}
+
+	monthNames := []string{
+		"January", "February", "March", "April", "May", "June",
+		"July", "August", "September", "October", "November", "December",
+	}
+
+	// day, month (string), year, full-time
+	return t.Day(), monthNames[t.Month()-1], t.Year(), t, nil
 }
