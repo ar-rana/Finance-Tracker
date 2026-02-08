@@ -12,6 +12,7 @@ type Expense struct {
 
 type Inflow struct {
 	Id          string `json:"id"`
+	Live        string `json:"live"`
 	Type        string `json:"type"`
 	Amount      int64  `json:"amount"`
 	Source      string `json:"source"`
@@ -22,6 +23,7 @@ type Inflow struct {
 
 type Stocks struct {
 	Id       string  `json:"id"`
+	Live     string  `json:"live"`
 	Type     string  `json:"type"`
 	Amount   int64   `json:"amount"`
 	Company  string  `json:"company"`
@@ -33,6 +35,7 @@ type Stocks struct {
 
 type Awards struct {
 	Id    string `json:"id"`
+	Live  string `json:"live"`
 	Type  string `json:"type"`
 	Month string `json:"amount"`
 	Year  string `json:"date"`
