@@ -116,7 +116,7 @@ func GetInflows(startStr string, endStr string) ([]models.Inflow, error) {
 		queryConditions = append(queryConditions, fmt.Sprintf("(c.year = %d AND c.month IN (%s))", year, mList))
 	}
 
-	queryString := fmt.Sprintf("SELECT * FROM c WHERE c.live = '%s'", cosmosPartition)
+	queryString := "SELECT * FROM c WHERE c.live = @live"
 	
 	if len(queryConditions) > 0 {
 		queryString += " AND (" + strings.Join(queryConditions, " OR ") + ")"
@@ -126,7 +126,9 @@ func GetInflows(startStr string, endStr string) ([]models.Inflow, error) {
 
 	partitionKey := azcosmos.NewPartitionKeyString(cosmosPartition)
 	query := azcosmos.QueryOptions{
-		QueryParameters: []azcosmos.QueryParameter{},
+		QueryParameters: []azcosmos.QueryParameter{
+			{Name: "@live", Value: cosmosPartition},
+		},
 	}
 
 	pager := container.NewQueryItemsPager(queryString, partitionKey, &query)

@@ -140,6 +140,56 @@ func InflowHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func StockHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
+		item, err := pkg.BodyParser[models.Stocks](w, r)
+		if err != nil {
+			return
+		}
+
+		result, err := service.CreateNewStock(item)
+		if err != nil {
+			pkg.SendERR(w, nil, err.Error())
+			return
+		}
+		pkg.SendOK(w, result, "Stock created successfully")
+		return
+	case http.MethodDelete:
+		id := r.URL.Query().Get("id")
+		if id == "" {
+			pkg.SendERR(w, nil, "id is required")
+			return
+		}
+
+		result, err := service.RemoveStockItem(id)
+		if err != nil {
+			pkg.SendERR(w, nil, err.Error())
+			return
+		}
+		pkg.SendOK(w, result, "Stock removed successfully")
+		return
+	case http.MethodGet:
+		start := r.URL.Query().Get("start")
+		end := r.URL.Query().Get("end")
+		if start == "" || end == "" {
+			pkg.SendERR(w, nil, "start and end dates are required")
+			return
+		}
+
+		result, err := service.GetStocksRange(start, end)
+		if err != nil {
+			pkg.SendERR(w, nil, err.Error())
+			return
+		}
+		pkg.SendOK(w, result, "Stocks fetched successfully")
+		return
+	default:
+		pkg.SendERR(w, nil, "method not allowed")
+		return
+	}
+}
+
 func main() {
 	log.SetOutput(os.Stderr)
 	listenAddr := ":8080"
@@ -157,7 +207,7 @@ func main() {
 	http.HandleFunc("/api/v0/inflow", InflowHandler)
 
 	// STOCK
-	// http.HandleFunc("/api/v0/stock", StockHandler)
+	http.HandleFunc("/api/v0/stock", StockHandler)
 
 	log.Printf("listening on localhost%s", listenAddr)
 	log.Fatal(http.ListenAndServe(listenAddr, nil))

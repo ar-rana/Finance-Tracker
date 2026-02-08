@@ -7,16 +7,14 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strings"
-	"time"
 	"v0/models"
 	"v0/pkg"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/data/azcosmos"
 )
 
-func CreateExpense(item models.Expense) (map[string]any, error) {
-	cosmosPartition := os.Getenv("COSMOS_EXPENSE")
+func CreateStock(item models.Stocks) (map[string]any, error) {
+	cosmosPartition := os.Getenv("COSMOS_STOCKS")
 	if cosmosPartition == "" {
 		return nil, errors.New("missing cosmos partition env var")
 	}
@@ -27,6 +25,13 @@ func CreateExpense(item models.Expense) (map[string]any, error) {
 		log.Printf("Failed to connect to Cosmos DB")
 		return nil, err
 	}
+
+	// store Unix timestamp in DateUnix
+	_, _, _, t, err := pkg.ParseDate(item.Date)
+	if err != nil {
+		return nil, err
+	}
+	item.DateUnix = t.Unix()
 
 	partitionKey := azcosmos.NewPartitionKeyString(cosmosPartition)
 	context := context.TODO()
@@ -46,8 +51,8 @@ func CreateExpense(item models.Expense) (map[string]any, error) {
 	return pkg.ParseCosmosResponse(response.RawResponse.Body)
 }
 
-func RemoveExpense(id string) (map[string]any, error) {
-	cosmosPartition := os.Getenv("COSMOS_EXPENSE")
+func RemoveStock(id string) (map[string]any, error) {
+	cosmosPartition := os.Getenv("COSMOS_STOCKS")
 	if cosmosPartition == "" {
 		return nil, errors.New("missing cosmos partition env var")
 	}
@@ -71,8 +76,8 @@ func RemoveExpense(id string) (map[string]any, error) {
 	return pkg.ParseCosmosResponse(response.RawResponse.Body)
 }
 
-func GetExpenses(startStr string, endStr string) ([]models.Expense, error) {
-	cosmosPartition := os.Getenv("COSMOS_EXPENSE")
+func GetStocks(start string, end string) ([]models.Stocks, error) {
+	cosmosPartition := os.Getenv("COSMOS_STOCKS")
 	if cosmosPartition == "" {
 		return nil, errors.New("missing cosmos partition env var")
 	}
@@ -82,57 +87,34 @@ func GetExpenses(startStr string, endStr string) ([]models.Expense, error) {
 		return nil, err
 	}
 
-	_, _, _, startTime, err := pkg.ParseDate(startStr)
+	_, _, _, startTime, err := pkg.ParseDate(start)
 	if err != nil {
 		return nil, fmt.Errorf("invalid start date: %v", err)
 	}
-	_, _, _, endTime, err := pkg.ParseDate(endStr)
+	_, _, _, endTime, err := pkg.ParseDate(end)
 	if err != nil {
 		return nil, fmt.Errorf("invalid end date: %v", err)
 	}
 
-	// Map to store months per year
-	yearMonths := make(map[int][]string)
-	current := time.Date(startTime.Year(), startTime.Month(), 1, 0, 0, 0, 0, time.UTC)
-	end := time.Date(endTime.Year(), endTime.Month(), 1, 0, 0, 0, 0, time.UTC)
+	// Use Unix timestamps for range comparison in Cosmos DB
+	startTS := startTime.Unix()
+	endTS := endTime.Unix()
 
-	for !current.After(end) {
-		y := current.Year()
-		m := current.Month().String()
-		yearMonths[y] = append(yearMonths[y], m)
-		current = current.AddDate(0, 1, 0)
-	}
-
-	// Build query
-	var queryConditions []string
-	for year, months := range yearMonths {
-		mList := ""
-		for i, m := range months {
-			if i > 0 {
-				mList += ", "
-			}
-			mList += fmt.Sprintf("'%s'", m)
-		}
-		queryConditions = append(queryConditions, fmt.Sprintf("(c.year = %d AND c.month IN (%s))", year, mList))
-	}
-
-	queryString := "SELECT * FROM c WHERE c.live = @live"
+	queryString := "SELECT * FROM c WHERE c.live = @live AND c.dateUnix >= @start AND c.dateUnix <= @end"
 	
-	if len(queryConditions) > 0 {
-		queryString += " AND (" + strings.Join(queryConditions, " OR ") + ")"
-	}
-
 	log.Printf("Query: %s", queryString)
 
 	partitionKey := azcosmos.NewPartitionKeyString(cosmosPartition)
 	query := azcosmos.QueryOptions{
 		QueryParameters: []azcosmos.QueryParameter{
 			{Name: "@live", Value: cosmosPartition},
+			{Name: "@start", Value: startTS},
+			{Name: "@end", Value: endTS},
 		},
 	}
 
 	pager := container.NewQueryItemsPager(queryString, partitionKey, &query)
-	var expenses []models.Expense
+	var stocks []models.Stocks
 	ctx := context.TODO()
 
 	for pager.More() {
@@ -142,14 +124,17 @@ func GetExpenses(startStr string, endStr string) ([]models.Expense, error) {
 		}
 
 		for _, itemBytes := range response.Items {
-			var expense models.Expense
-			if err := json.Unmarshal(itemBytes, &expense); err != nil {
-				log.Printf("Failed to unmarshal expense: %v", err)
+			var stock models.Stocks
+			if err := json.Unmarshal(itemBytes, &stock); err != nil {
+				log.Printf("Failed to unmarshal stock: %v", err)
 				continue
 			}
-			expenses = append(expenses, expense)
+			stocks = append(stocks, stock)
 		}
 	}
 
-	return expenses, nil
+	// Optional: Filter stocks by date range in Go if needed
+	// ...
+
+	return stocks, nil
 }

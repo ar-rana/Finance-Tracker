@@ -22,14 +22,15 @@ type Inflow struct {
 }
 
 type Stocks struct {
-	Id       string  `json:"id"`
-	Live     string  `json:"live"`
-	Type     string  `json:"type"`
-	Amount   int64   `json:"amount"`
+	Id   string `json:"id"`
+	Live string `json:"live"`
+	Type string `json:"type"`
+	// Amount   int64   `json:"amount"`
 	Company  string  `json:"company"`
 	Price    float64 `json:"price"`
 	Quantity int64   `json:"quantity"`
 	Date     string  `json:"date"`
+	DateUnix int64   `json:"dateUnix"`
 	Status   string  `json:"status"`
 }
 
