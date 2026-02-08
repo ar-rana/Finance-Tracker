@@ -12,64 +12,57 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/data/azcosmos"
 )
 
-func CreateStock(item models.Stocks) (map[string]any, error) {
-	cosmosPartition := os.Getenv("COSMOS_STOCKS")
+func CreateAward(item models.Awards) (map[string]any, error) {
+	cosmosPartition := os.Getenv("COSMOS_AWARD")
 	if cosmosPartition == "" {
 		return nil, errors.New("missing cosmos partition env var")
 	}
-	log.Printf("partition key: %s", cosmosPartition)
 
 	container, err := ConnectToCosmosDB()
 	if err != nil {
-		log.Printf("Failed to connect to Cosmos DB")
 		return nil, err
 	}
 
 	partitionKey := azcosmos.NewPartitionKeyString(cosmosPartition)
-	context := context.TODO()
+	ctx := context.TODO()
 
 	item.Live = cosmosPartition
 	bytes, err := json.Marshal(item)
 	if err != nil {
-		log.Printf("Failed to marshal item")
 		return nil, err
 	}
-	response, err := container.UpsertItem(context, partitionKey, bytes, nil)
+	response, err := container.UpsertItem(ctx, partitionKey, bytes, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Printf("Item written to Cosmos DB. Status: %d", response.RawResponse.StatusCode)
 	return pkg.ParseCosmosResponse(response.RawResponse.Body)
 }
 
-func RemoveStock(id string) (map[string]any, error) {
-	cosmosPartition := os.Getenv("COSMOS_STOCKS")
+func RemoveAward(id string) (map[string]any, error) {
+	cosmosPartition := os.Getenv("COSMOS_AWARD")
 	if cosmosPartition == "" {
 		return nil, errors.New("missing cosmos partition env var")
 	}
-	log.Printf("partition key: %s", cosmosPartition)
 
 	container, err := ConnectToCosmosDB()
 	if err != nil {
-		log.Printf("Failed to connect to Cosmos DB")
 		return nil, err
 	}
 
 	partitionKey := azcosmos.NewPartitionKeyString(cosmosPartition)
-	context := context.TODO()
+	ctx := context.TODO()
 
-	response, err := container.DeleteItem(context, partitionKey, id, nil)
+	response, err := container.DeleteItem(ctx, partitionKey, id, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Printf("Item deleted from Cosmos DB. Status: %d", response.RawResponse.StatusCode)
 	return pkg.ParseCosmosResponse(response.RawResponse.Body)
 }
 
-func GetStocks(start int64, end int64) ([]models.Stocks, error) {
-	cosmosPartition := os.Getenv("COSMOS_STOCKS")
+func GetAwards(user string) ([]models.Awards, error) {
+	cosmosPartition := os.Getenv("COSMOS_AWARDS")
 	if cosmosPartition == "" {
 		return nil, errors.New("missing cosmos partition env var")
 	}
@@ -79,21 +72,18 @@ func GetStocks(start int64, end int64) ([]models.Stocks, error) {
 		return nil, err
 	}
 
-	queryString := "SELECT * FROM c WHERE c.live = @live AND c.dateUnix >= @start AND c.dateUnix <= @end"
+	queryString := "SELECT * FROM c WHERE c.live = @live AND c.user = @user"
 	
-	log.Printf("Query: %s", queryString)
-
 	partitionKey := azcosmos.NewPartitionKeyString(cosmosPartition)
 	query := azcosmos.QueryOptions{
 		QueryParameters: []azcosmos.QueryParameter{
 			{Name: "@live", Value: cosmosPartition},
-			{Name: "@start", Value: start},
-			{Name: "@end", Value: end},
+			{Name: "@user", Value: user},
 		},
 	}
 
 	pager := container.NewQueryItemsPager(queryString, partitionKey, &query)
-	var stocks []models.Stocks
+	var awards []models.Awards
 	ctx := context.TODO()
 
 	for pager.More() {
@@ -103,14 +93,14 @@ func GetStocks(start int64, end int64) ([]models.Stocks, error) {
 		}
 
 		for _, itemBytes := range response.Items {
-			var stock models.Stocks
-			if err := json.Unmarshal(itemBytes, &stock); err != nil {
-				log.Printf("Failed to unmarshal stock: %v", err)
+			var award models.Awards
+			if err := json.Unmarshal(itemBytes, &award); err != nil {
+				log.Printf("Failed to unmarshal award: %v", err)
 				continue
 			}
-			stocks = append(stocks, stock)
+			awards = append(awards, award)
 		}
 	}
 
-	return stocks, nil
+	return awards, nil
 }

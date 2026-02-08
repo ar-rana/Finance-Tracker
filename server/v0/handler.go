@@ -190,6 +190,55 @@ func StockHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func AwardHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
+		item, err := pkg.BodyParser[models.Awards](w, r)
+		if err != nil {
+			return
+		}
+
+		result, err := service.CreateNewAward(item)
+		if err != nil {
+			pkg.SendERR(w, nil, err.Error())
+			return
+		}
+		pkg.SendOK(w, result, "Award created successfully")
+		return
+	case http.MethodDelete:
+		id := r.URL.Query().Get("id")
+		if id == "" {
+			pkg.SendERR(w, nil, "id is required")
+			return
+		}
+
+		result, err := service.RemoveAwardItem(id)
+		if err != nil {
+			pkg.SendERR(w, nil, err.Error())
+			return
+		}
+		pkg.SendOK(w, result, "Award removed successfully")
+		return
+	// case http.MethodGet:
+		// user := r.URL.Query().Get("user")
+		// if user == "" {
+		// 	pkg.SendERR(w, nil, "user is required")
+		// 	return
+		// }
+
+		// result, err := service.GetAllAwardsByUser(user)
+		// if err != nil {
+		// 	pkg.SendERR(w, nil, err.Error())
+		// 	return
+		// }
+		// pkg.SendOK(w, result, "Awards fetched successfully")
+		// return
+	default:
+		pkg.SendERR(w, nil, "method not allowed")
+		return
+	}
+}
+
 func main() {
 	log.SetOutput(os.Stderr)
 	listenAddr := ":8080"
@@ -208,6 +257,9 @@ func main() {
 
 	// STOCK
 	http.HandleFunc("/api/v0/stock", StockHandler)
+
+	// AWARD
+	http.HandleFunc("/api/v0/award", AwardHandler)
 
 	log.Printf("listening on localhost%s", listenAddr)
 	log.Fatal(http.ListenAndServe(listenAddr, nil))
