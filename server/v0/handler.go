@@ -22,7 +22,7 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		log.Printf("Env Acessed: false")
 	}
-	pkg.SendOK(w, message, "Server active and running")
+	pkg.SendOK(w, message, "Server active and running, env: "+os.Getenv("ENV_CHECK"))
 }
 
 func DBConnectionCheckHandler(w http.ResponseWriter, r *http.Request) {
@@ -324,6 +324,71 @@ func SettingsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
+		item, err := pkg.BodyParser[models.UserDTO](w, r)
+
+		if err != nil {
+			return
+		}
+
+		username := strings.TrimSpace(item.Username)
+		password := strings.TrimSpace(item.Password)
+
+		if username == "" || password == "" {
+			pkg.SendERR(w, nil, "username and password are required")
+			return
+		}
+
+		result, err := service.Login(username, password)
+		if err != nil {
+			pkg.SendERR(w, nil, err.Error())
+			return
+		}
+
+		pkg.SendOK(w, result, "Login successful")
+		return
+	default:
+		pkg.SendERR(w, nil, "method not allowed")
+		return
+	}
+}
+
+func SignupHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
+		item, err := pkg.BodyParser[models.UserDTO](w, r)
+
+		if err != nil {
+			return
+		}
+
+		username := strings.TrimSpace(item.Username)
+		password := strings.TrimSpace(item.Password)
+
+		if username == "" || password == "" {
+			pkg.SendERR(w, nil, "username and password are required")
+			return
+		}
+
+		result, err := service.CreateNewUser(models.User{
+			Username: username,
+			Password: password,
+		})
+		if err != nil {
+			pkg.SendERR(w, nil, err.Error())
+			return
+		}
+
+		pkg.SendOK(w, result, "Signup successful")
+		return
+	default:
+		pkg.SendERR(w, nil, "method not allowed")
+		return
+	}
+}
+
 func main() {
 	log.SetOutput(os.Stderr)
 	listenAddr := ":8080"
@@ -351,6 +416,12 @@ func main() {
 
 	// SETTINGS
 	http.HandleFunc("/api/v0/settings", SettingsHandler)
+
+	// Login
+	http.HandleFunc("/api/v0/login", LoginHandler)
+
+	// Signup
+	http.HandleFunc("/api/v0/signup", SignupHandler)
 
 	log.Printf("listening on localhost%s", listenAddr)
 	log.Fatal(http.ListenAndServe(listenAddr, nil))

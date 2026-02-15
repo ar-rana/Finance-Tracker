@@ -78,7 +78,7 @@ func BodyParser[T any](w http.ResponseWriter, r *http.Request) (T, error) {
 func ParseDate(dateStr string) (int, string, int, time.Time, error) {
 	// Support both / and - separators
 	normalizedDate := strings.ReplaceAll(dateStr, "-", "/")
-	t, err := time.Parse("02/01/2006", normalizedDate)
+	t, err := time.Parse("02/01/2006", normalizedDate) // - date/month/year
 	if err != nil {
 		return 0, "", 0, time.Time{}, err
 	}

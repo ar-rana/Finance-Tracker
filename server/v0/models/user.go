@@ -13,3 +13,9 @@ type User struct {
 	Password string   `json:"password"`
 	Settings Settings `json:"settings"`
 }
+
+type UserDTO struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Token    string `json:"token"`
+}
