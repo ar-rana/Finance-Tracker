@@ -193,6 +193,20 @@ func StockHandler(w http.ResponseWriter, r *http.Request) {
 
 func AwardHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
+	case http.MethodGet:
+		user := r.URL.Query().Get("user")
+		if user == "" {
+			pkg.SendERR(w, nil, "user is required")
+			return
+		}
+
+		result, err := service.GetAllAwardsByUser(user)
+		if err != nil {
+			pkg.SendERR(w, nil, err.Error())
+			return
+		}
+		pkg.SendOK(w, result, "Awards fetched successfully")
+		return
 	case http.MethodPost:
 		item, err := pkg.BodyParser[models.Awards](w, r)
 		if err != nil {
@@ -367,6 +381,36 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func enableCORS(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		origin := r.Header.Get("Origin")
+		whiteList := os.Getenv("WHITE_LISTED_DOMAINS")
+		domains := strings.Split(whiteList, ",")
+
+		isAllowed := false
+		for _, d := range domains {
+			if strings.TrimSpace(d) == origin {
+				isAllowed = true
+				break
+			}
+		}
+
+		if isAllowed {
+			w.Header().Set("Access-Control-Allow-Origin", origin)
+		}
+
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		next(w, r)
+	}
+}
+
 func main() {
 	log.SetOutput(os.Stderr)
 	listenAddr := ":8080"
@@ -374,33 +418,32 @@ func main() {
 		listenAddr = ":" + val
 	}
 
-	http.HandleFunc("/api/v0", helloHandler)
-	// http.HandleFunc("/api/v0/db-connection-check", DBConnectionCheckHandler)
+	http.HandleFunc("/api/v0", enableCORS(helloHandler))
+	// http.HandleFunc("/api/v0/db-connection-check", enableCORS(DBConnectionCheckHandler))
 
 	// EXPENSE
-	http.HandleFunc("/api/v0/expense", ExpenseHandler)
+	http.HandleFunc("/api/v0/expense", enableCORS(ExpenseHandler))
 
 	// INFLOW
-	http.HandleFunc("/api/v0/inflow", InflowHandler)
+	http.HandleFunc("/api/v0/inflow", enableCORS(InflowHandler))
 
 	// STOCK
-	http.HandleFunc("/api/v0/stock", StockHandler)
+	http.HandleFunc("/api/v0/stock", enableCORS(StockHandler))
 
 	// AWARD
-	http.HandleFunc("/api/v0/award", AwardHandler)
+	http.HandleFunc("/api/v0/award", enableCORS(AwardHandler))
 
 	// USER
-	// http.HandleFunc("/api/v0/user", UserHandler)
+	// http.HandleFunc("/api/v0/user", enableCORS(UserHandler))
 
 	// SETTINGS
-	http.HandleFunc("/api/v0/settings", SettingsHandler)
+	http.HandleFunc("/api/v0/settings", enableCORS(SettingsHandler))
 
 	// Login
-	http.HandleFunc("/api/v0/login", LoginHandler)
+	http.HandleFunc("/api/v0/login", enableCORS(LoginHandler))
 
 	// Signup
-	http.HandleFunc("/api/v0/signup", SignupHandler)
+	http.HandleFunc("/api/v0/signup", enableCORS(SignupHandler))
 
-	log.Printf("listening on localhost%s", listenAddr)
 	log.Fatal(http.ListenAndServe(listenAddr, nil))
 }

@@ -13,7 +13,7 @@ import (
 )
 
 func CreateAward(item models.Awards) (map[string]any, error) {
-	cosmosPartition := os.Getenv("COSMOS_AWARD")
+	cosmosPartition := os.Getenv("COSMOS_AWARDS")
 	if cosmosPartition == "" {
 		return nil, errors.New("missing cosmos partition env var")
 	}
@@ -73,7 +73,7 @@ func GetAwards(user string) ([]models.Awards, error) {
 	}
 
 	queryString := "SELECT * FROM c WHERE c.live = @live AND c.user = @user"
-	
+
 	partitionKey := azcosmos.NewPartitionKeyString(cosmosPartition)
 	query := azcosmos.QueryOptions{
 		QueryParameters: []azcosmos.QueryParameter{
