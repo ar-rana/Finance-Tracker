@@ -28,3 +28,12 @@ export const getWarningModalState = (state: RootState) => {
 };
 
 export const getAllSettingData = (state: RootState): SettingsForm => state.settings.settings;
+
+export const getUser = (state: RootState) => {
+    return {
+        user: state.user.user,
+        token: state.user.token,
+    }
+};
+
+export const getAwards = (state: RootState) => state.user.awards;

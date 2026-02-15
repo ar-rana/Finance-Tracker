@@ -3,7 +3,8 @@ package models
 type Settings struct {
 	GraphPreferences []string `json:"graph_preferences"`
 	Budget           int32    `json:"budget"`
-	Timeline         string   `json:"timeline"`
+	Start            string   `json:"start"`
+	End              string   `json:"end"`
 }
 
 type User struct {

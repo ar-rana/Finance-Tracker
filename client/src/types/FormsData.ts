@@ -8,7 +8,7 @@ export interface StocksFormData {
 }
 
 export interface AddExpenseForm {
-    amount: string; 
+    amount: string;
     type: string;
     description: string;
     year: string;
@@ -36,4 +36,11 @@ export interface AnalyticsFormState {
     period: number;
     interest: string;
     rate: number;
+}
+
+export interface AwardForm {
+    month: string;
+    year: string;
+    award: string;
+    user: string;
 }

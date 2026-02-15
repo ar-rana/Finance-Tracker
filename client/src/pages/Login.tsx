@@ -1,27 +1,59 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import finup_bg from "../assets/finup_bg.png";
 import finup_logo from "../assets/finup_logo.jpg";
 import logo from "../assets/logo.png";
 import { useAppDispatch } from "../hooks/reduxHooks";
 import { warn } from "../redux/modalSlice";
+import { login, signup } from "../api/userAPIs";
 
 const Login: React.FC = () => {
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const dispatch = useAppDispatch();
+
+  const submitHandler = (e: React.FormEvent) => {
+    e.preventDefault();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!username || !password) {
+      dispatch(warn("Email and password cannot be empty"));
+      return;
+    }
+
+    if (!emailRegex.test(username)) {
+      dispatch(warn("Please enter a valid email address"));
+      return;
+    }
+
+    if (password.length <= 6) {
+      dispatch(warn("Password must be more than 6 characters"));
+      return;
+    }
+
+    if (isLogin) {
+      login(username, password, dispatch);
+    } else {
+      signup(username, password, dispatch);
+    }
+  };
+
   useEffect(() => {
     dispatch(warn("The backend is not connect, just click on 'Continue with Google' to proceed & review"));
   }, [])
-  
+
   return (
     <div className="h-screen flex bg-gray-900 md:p-10 p-4">
-        {/* Left Panel */}
+      {/* Left Panel */}
       <div
         className="hidden md:flex w-1/2 items-center justify-center p-12 bg-gradient-to-b from-gray-800 via-gray-900 to-black bg-blend-overlay bg-cover bg-center text-white rounded-2xl"
         style={{ backgroundImage: `url(${finup_bg})` }}
       >
         <div className="max-w-xs text-center">
           <div className="mx-auto w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg mb-6 transform transition-transform duration-300 hover:scale-105">
-            <img src={finup_logo} className="rounded-full" alt="logo"/>
+            <img src={finup_logo} className="rounded-full" alt="logo" />
           </div>
 
           <h2 className="text-2xl font-semibold mb-2">finUp</h2>
@@ -38,7 +70,7 @@ const Login: React.FC = () => {
           <div className="mb-6 text-center">
             <div className="flex items-center justify-center mb-3">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br flex items-center justify-center text-white mr-3">
-                <img src={logo} className="rounded-full" alt="logo"/>
+                <img src={logo} className="rounded-full" alt="logo" />
               </div>
               <h1 className="text-xl font-semibold text-gray-100">
                 Sign in to finUp
@@ -49,55 +81,95 @@ const Login: React.FC = () => {
             </p>
           </div>
 
-          {/* OAuth buttons */}
-          <div className="space-y-3 mb-4">
-            <a
-              type="button"
-              href="/dashboard"
-              className="w-full flex items-center justify-center gap-3 py-2 rounded-md bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-sm hover:brightness-95 transition transform hover:-translate-y-0.5"
-            >
-              <i className="fa fa-google" aria-hidden="true"></i>
-              Continue with Google
-            </a>
-          </div>
+          <div className="space-y-4">
+            {/* Login Accordion */}
+            <div className="border-b border-gray-800 pb-2">
+              <button
+                onClick={() => setIsLogin(true)}
+                className={`w-full flex justify-between items-center py-2 text-sm font-medium transition-colors ${isLogin ? "text-indigo-500" : "text-gray-500 hover:text-gray-300"}`}
+              >
+                <span>LOGIN</span>
+                <i className={`fa fa-chevron-down transition-transform duration-300 ${isLogin ? "rotate-0" : "-rotate-180 text-gray-700"}`}></i>
+              </button>
 
-          <div className="flex items-center my-4">
-            <hr className="flex-1 border-gray-800" />
-            <span className="mx-3 text-xs text-gray-500">or</span>
-            <hr className="flex-1 border-gray-800" />
-          </div>
-
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-            <label className="block">
-              <span className="text-xs text-gray-400">Email</span>
-              <input
-                type="email"
-                required
-                className="mt-1 w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-                placeholder="you@example.com"
-              />
-            </label>
-
-            <label className="block">
-              <div className="flex justify-between items-center">
-                <span className="text-xs text-gray-400">Password</span>
+              <div className={`transition-all duration-500 ease-in-out overflow-hidden ${isLogin ? "max-h-[500px] opacity-100 mt-2" : "max-h-0 opacity-0"}`}>
+                <form className="space-y-4 pb-4" onSubmit={submitHandler}>
+                  <input
+                    onChange={(e) => setUsername(e.target.value)}
+                    value={username}
+                    type="email"
+                    placeholder="Email"
+                    required
+                    className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition"
+                  />
+                  <div className="relative">
+                    <input
+                      onChange={(e) => setPassword(e.target.value)}
+                      value={password}
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Password"
+                      required
+                      className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+                    >
+                      <i className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
+                    </button>
+                  </div>
+                  <button type="submit" className="w-full py-2 bg-indigo-600 text-white rounded font-medium hover:bg-indigo-500 transition">
+                    Sign In
+                  </button>
+                </form>
               </div>
-              <input
-                type="password"
-                required
-                className="mt-1 w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-                placeholder="••••••••"
-              />
-            </label>
+            </div>
 
-            <button
-              type="submit"
-              className="w-full py-2 rounded-md bg-indigo-600 text-white font-medium hover:bg-indigo-500 transition transform hover:-translate-y-0.5"
-            >
-              Sign in
-            </button>
-            <br />
-          </form>
+            {/* Signup Accordion */}
+            <div className="border-b border-gray-800 pb-2">
+              <button
+                onClick={() => setIsLogin(false)}
+                className={`w-full flex justify-between items-center py-2 text-sm font-medium transition-colors ${!isLogin ? "text-purple-500" : "text-gray-500 hover:text-gray-300"}`}
+              >
+                <span>CREATE ACCOUNT</span>
+                <i className={`fa fa-chevron-down transition-transform duration-300 ${!isLogin ? "rotate-0" : "-rotate-180 text-gray-700"}`}></i>
+              </button>
+
+              <div className={`transition-all duration-500 ease-in-out overflow-hidden ${!isLogin ? "max-h-[500px] opacity-100 mt-2" : "max-h-0 opacity-0"}`}>
+                <form className="space-y-4 pb-4" onSubmit={submitHandler}>
+                  <input
+                    onChange={(e) => setUsername(e.target.value)}
+                    value={username}
+                    type="email"
+                    placeholder="Email"
+                    required
+                    className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-gray-100 focus:outline-none focus:ring-1 focus:ring-purple-500 transition"
+                  />
+                  <div className="relative">
+                    <input
+                      onChange={(e) => setPassword(e.target.value)}
+                      value={password}
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Password"
+                      required
+                      className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+                    >
+                      <i className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
+                    </button>
+                  </div>
+                  <button type="submit" className="w-full py-2 bg-purple-600 text-white rounded font-medium hover:bg-purple-500 transition">
+                    Get Started
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
     </div>

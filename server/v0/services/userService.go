@@ -14,7 +14,8 @@ import (
 var DefaultSettings = models.Settings{
 	GraphPreferences: []string{"Bar_Graphs", "Radar_Chart", "Line_Graph"},
 	Budget:           10000,
-	Timeline:         "monthly",
+	Start:            "",
+	End:              "",
 }
 
 func CreateNewUser(item models.User) (map[string]any, error) {

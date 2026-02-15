@@ -16,8 +16,8 @@ export const settingsSlice = createSlice({
   initialState: initialState,
   reducers: {
     allSettings: (state, action: PayloadAction<SettingsForm>) => {
-        state.settings = action.payload;
-        // console.log(state.settings);
+      state.settings = action.payload;
+      // console.log(state.settings);
     },
     setGraphs: (state, action: PayloadAction<string[]>) => {
       state.settings.graphs = action.payload;
@@ -26,9 +26,12 @@ export const settingsSlice = createSlice({
       state.settings.start = action.payload.start;
       state.settings.end = action.payload.end;
     },
+    setBudget: (state, action: PayloadAction<string>) => {
+      state.settings.budget = action.payload;
+    },
   },
 });
 
-export const { allSettings, setGraphs, setDates } = settingsSlice.actions;
+export const { allSettings, setGraphs, setDates, setBudget } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

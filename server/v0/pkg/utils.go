@@ -84,8 +84,8 @@ func ParseDate(dateStr string) (int, string, int, time.Time, error) {
 	}
 
 	monthNames := []string{
-		"January", "February", "March", "April", "May", "June",
-		"July", "August", "September", "October", "November", "December",
+		"january", "february", "march", "april", "may", "june",
+		"july", "august", "september", "october", "november", "december",
 	}
 
 	// day, month (string), year, full-time

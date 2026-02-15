@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
-import { getAwardModalState } from "../../redux/selectors";
+import { getAwardModalState, getUser } from "../../redux/selectors";
 import { toggleAward, warn } from "../../redux/modalSlice";
+import { addAward } from "../../api/userAPIs";
 
 const AwardModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const openState = useAppSelector(getAwardModalState);
+  const user = useAppSelector(getUser);
 
   const [award, setAward] = useState<string>("Select Award");
   const [confirm, setConfirm] = useState<boolean>(false);
@@ -20,11 +22,29 @@ const AwardModal: React.FC = () => {
   };
 
   const onSubmit = () => {
+    if (award === "Select Award") {
+      dispatch(warn("Please select an award first!"))
+      return;
+    }
+
     if (!confirm) {
       dispatch(warn("Are you sure you deserve this award (。_。)"))
       setConfirm(true);
       return;
     }
+
+    const now = new Date();
+    const month = now.toLocaleString("default", { month: "long" }).toLowerCase();
+    const year = String(now.getFullYear());
+
+    addAward({
+      month,
+      year,
+      award,
+      user: user.user
+    }, dispatch);
+
+    close();
   }
 
   return (
@@ -57,9 +77,8 @@ const AwardModal: React.FC = () => {
           </span>
         </button>
         <div
-          className={`${
-            !open ? "h-0" : "h-auto"
-          } w-full z-10 bg-cyan-500 divide-y divide-gray-400 rounded-lg shadow-sm overflow-hidden`}
+          className={`${!open ? "h-0" : "h-auto"
+            } w-full z-10 bg-cyan-500 divide-y divide-gray-400 rounded-lg shadow-sm overflow-hidden`}
         >
           <ul className="py-1 text-sm font-semibold text-white">
             <li

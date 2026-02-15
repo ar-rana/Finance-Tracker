@@ -240,48 +240,26 @@ func AwardHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func UserHandler(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodPost:
-		item, err := pkg.BodyParser[models.User](w, r)
-		if err != nil {
-			return
-		}
-
-		// Trim and check both username and password
-		item.Username = strings.TrimSpace(item.Username)
-		item.Password = strings.TrimSpace(item.Password)
-
-		if item.Username == "" || item.Password == "" {
-			pkg.SendERR(w, nil, "username and password are required")
-			return
-		}
-
-		result, err := service.CreateNewUser(item)
-		if err != nil {
-			pkg.SendERR(w, nil, err.Error())
-			return
-		}
-		pkg.SendOK(w, result, "User created successfully")
-		return
-	// case http.MethodDelete:
-	// 	id := r.URL.Query().Get("id")
-	// 	if id == "" {
-	// 		pkg.SendERR(w, nil, "id is required")
-	// 		return
-	// 	}
-	// 	result, err := service.RemoveUserItem(id)
-	// 	if err != nil {
-	// 		pkg.SendERR(w, nil, err.Error())
-	// 		return
-	// 	}
-	// 	pkg.SendOK(w, result, "User removed successfully")
-	// 	return
-	default:
-		pkg.SendERR(w, nil, "method not allowed")
-		return
-	}
-}
+// func UserHandler(w http.ResponseWriter, r *http.Request) {
+// 	switch r.Method {
+// 	case http.MethodDelete:
+// 		id := r.URL.Query().Get("id")
+// 		if id == "" {
+// 			pkg.SendERR(w, nil, "id is required")
+// 			return
+// 		}
+// 		result, err := service.RemoveUserItem(id)
+// 		if err != nil {
+// 			pkg.SendERR(w, nil, err.Error())
+// 			return
+// 		}
+// 		pkg.SendOK(w, result, "User removed successfully")
+// 		return
+// 	default:
+// 		pkg.SendERR(w, nil, "method not allowed")
+// 		return
+// 	}
+// }
 
 func SettingsHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
@@ -412,7 +390,7 @@ func main() {
 	http.HandleFunc("/api/v0/award", AwardHandler)
 
 	// USER
-	http.HandleFunc("/api/v0/user", UserHandler)
+	// http.HandleFunc("/api/v0/user", UserHandler)
 
 	// SETTINGS
 	http.HandleFunc("/api/v0/settings", SettingsHandler)
