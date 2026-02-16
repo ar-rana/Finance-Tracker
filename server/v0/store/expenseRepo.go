@@ -113,11 +113,11 @@ func GetExpenses(startStr string, endStr string) ([]models.Expense, error) {
 			}
 			mList += fmt.Sprintf("'%s'", m)
 		}
-		queryConditions = append(queryConditions, fmt.Sprintf("(c.year = %d AND c.month IN (%s))", year, mList))
+		queryConditions = append(queryConditions, fmt.Sprintf("(c.year = '%d' AND c.month IN (%s))", year, mList))
 	}
 
 	queryString := "SELECT * FROM c WHERE c.live = @live"
-	
+
 	if len(queryConditions) > 0 {
 		queryString += " AND (" + strings.Join(queryConditions, " OR ") + ")"
 	}

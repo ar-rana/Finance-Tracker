@@ -32,7 +32,7 @@ func WriteToCosmosDBTest() (any, error) {
 		Category:    "Test",
 		Month:       "January",
 		Description: "Test",
-		Year:        2025,
+		Year:        "2025",
 	}
 	partitionKey := azcosmos.NewPartitionKeyString(item.Live)
 	context := context.TODO()

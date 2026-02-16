@@ -7,7 +7,7 @@ type Expense struct {
 	Category    string `json:"category"`
 	Month       string `json:"month"`
 	Description string `json:"description"`
-	Year        int32  `json:"year"`
+	Year        string `json:"year"`
 }
 
 type Inflow struct {
@@ -18,7 +18,7 @@ type Inflow struct {
 	Source      string `json:"source"`
 	Month       string `json:"month"`
 	Description string `json:"description"`
-	Year        int32  `json:"year"`
+	Year        string `json:"year"`
 }
 
 type Stocks struct {
