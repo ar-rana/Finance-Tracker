@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { AppDispatch } from "../store";
-import { warn } from "../redux/modalSlice";
+import { success, warn } from "../redux/modalSlice";
 import type { Response as ApiResponse } from "../types/APIData";
 import { setBudget, setDates, setGraphs } from "../redux/settingsSlice";
 import type { SettingsForm, AwardForm } from "../types/FormsData";
@@ -8,7 +8,7 @@ import { setUser, setAward, setAwards } from "../redux/userSlice";
 
 const API_URL = import.meta.env.VITE_BASE_URL || "http://localhost:7071";
 
-
+const getErrMsg = (err: any) => err.response?.data?.message || err.message || "Network Error";
 
 /**
  * SETTINGS
@@ -26,7 +26,7 @@ function getSettings(dispatch: AppDispatch) {
         }
     }).catch((err) => {
         console.log(err);
-        dispatch(warn(err.response.data.message));
+        dispatch(warn(getErrMsg(err)));
     })
 }
 
@@ -43,7 +43,7 @@ function updateSettings(settings: SettingsForm, dispatch: AppDispatch) {
         }
     }).catch((err) => {
         console.log(err);
-        dispatch(warn(err.response.data.message));
+        dispatch(warn(getErrMsg(err)));
     })
 }
 
@@ -61,7 +61,7 @@ function login(user: string, pass: string, dispatch: AppDispatch) {
         }
     }).catch((err) => {
         console.log(err);
-        dispatch(warn(err.response.data.message));
+        dispatch(warn(getErrMsg(err)));
     })
 }
 
@@ -70,36 +70,37 @@ function signup(user: string, pass: string, dispatch: AppDispatch) {
         const res = response.data;
 
         if (res.success) {
-            dispatch(setUser({ user: res.data.username, token: res.data.token }));
+            dispatch(success(res.message + " - Please login to continue"));
         } else {
             dispatch(warn(res.message));
         }
     }).catch((err) => {
         console.log(err);
-        dispatch(warn(err.response.data.message));
+        dispatch(warn(getErrMsg(err)));
     })
 }
 
 /**
  * AWARDS
  */
-function addAward(award: AwardForm, dispatch: AppDispatch) {
-    axios.post<ApiResponse>(`${API_URL}/api/v0/award`, award).then((response) => {
+function addAward(award: AwardForm, user: string, dispatch: AppDispatch) {
+    axios.post<ApiResponse>(`${API_URL}/api/v0/award?user=${user}`, award).then((response) => {
         const res = response.data;
 
         if (res.success) {
             dispatch(setAward(res.data));
+            dispatch(success("Congratulations! On your new award"));
         } else {
             dispatch(warn(res.message));
         }
     }).catch((err) => {
         console.log(err);
-        dispatch(warn(err.response.data.message));
+        dispatch(warn(getErrMsg(err)));
     })
 }
 
-function getAwards(dispatch: AppDispatch) {
-    axios.get<ApiResponse>(`${API_URL}/api/v0/award`).then((response) => {
+function getAwards(user: string, dispatch: AppDispatch) {
+    axios.get<ApiResponse>(`${API_URL}/api/v0/award?user=${user}`).then((response) => {
         const res = response.data;
 
         if (res.success) {
@@ -109,7 +110,7 @@ function getAwards(dispatch: AppDispatch) {
         }
     }).catch((err) => {
         console.log(err);
-        dispatch(warn(err.response.data.message));
+        dispatch(warn(getErrMsg(err)));
     })
 }
 

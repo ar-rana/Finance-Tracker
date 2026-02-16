@@ -11,6 +11,7 @@ export const getAllModalStates = (state: RootState): ReduxModalState => {
         stocksOpen: state.modals.stocksOpen,
         warningOpen: state.modals.warningOpen,
         analyticsOpen: state.modals.analyticsOpen,
+        successOpen: state.modals.successOpen,
     }
 };
 
@@ -26,6 +27,12 @@ export const getWarningModalState = (state: RootState) => {
         warning: state.modals.warning,
     }
 };
+export const getSuccessModalState = (state: RootState) => {
+    return {
+        successOpen: state.modals.successOpen,
+        success: state.modals.success,
+    }
+};
 
 export const getAllSettingData = (state: RootState): SettingsForm => state.settings.settings;
 
@@ -37,3 +44,7 @@ export const getUser = (state: RootState) => {
 };
 
 export const getAwards = (state: RootState) => state.user.awards;
+
+export const getStocks = (state: RootState) => state.data.stocks;
+export const getExpenses = (state: RootState) => state.data.expenses;
+export const getInflows = (state: RootState) => state.data.inflows;

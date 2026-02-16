@@ -9,6 +9,8 @@ const initialState: ReduxModalState = {
     stocksOpen: false,
     warningOpen: false,
     analyticsOpen: false,
+    successOpen: false,
+    success: "",
     warning: "",
 }
 
@@ -37,13 +39,20 @@ export const modalSlice = createSlice({
         closeWarn: (state) => {
             state.warningOpen = false;
         },
+        closeSuccess: (state) => {
+            state.successOpen = false;
+        },
+        success: (state, action: PayloadAction<string>) => {
+            state.successOpen = !state.successOpen;
+            state.success = action.payload;
+        },
         warn: (state, action: PayloadAction<string>) => {
             state.warningOpen = !state.warningOpen;
             state.warning = action.payload;
         },
-    } 
+    }
 })
 
-export const { toggleAward, toggleExpense, toggleInflow, toggleSettings, toggleStocks, toggleAnalytics, warn, closeWarn } = modalSlice.actions
+export const { toggleAward, toggleExpense, toggleInflow, toggleSettings, toggleStocks, toggleAnalytics, warn, closeWarn, closeSuccess, success } = modalSlice.actions
 
 export default modalSlice.reducer

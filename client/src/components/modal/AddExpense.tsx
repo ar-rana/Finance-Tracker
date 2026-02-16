@@ -6,16 +6,18 @@ import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { getExpenseModalState } from "../../redux/selectors";
 import { toggleExpense } from "../../redux/modalSlice";
 import FormHeader from "../helpers/FormHeader";
+import { addExpense } from "../../api/inflow-outflow";
+import { warn } from "../../redux/modalSlice";
 
 const AddExpense: React.FC = () => {
   const dispatch = useAppDispatch();
   const openState = useAppSelector(getExpenseModalState);
 
   const [expenseData, setExpenseData] = useState<AddExpenseForm>({
-    amount: "",
+    amount: 0,
     description: "",
     month: "",
-    type: "",
+    category: "",
     year: "",
   });
 
@@ -27,17 +29,27 @@ const AddExpense: React.FC = () => {
     });
   };
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   const numericAmount = parseFloat(expenseData.amount || "0");
-  //   if (numericAmount <= 0 || typeof expenseData.amount !== "number") {
-  //     dispatch(warn("Invalid Argument"));
-  //     return;
-  //   }
-  //   console.log({ amount: numericAmount, expenseData });
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (Number(expenseData.amount) <= 0) {
+      dispatch(warn("Invalid Amount Argument"));
+      return;
+    }
 
-  //   // props.setOpen(false);
-  // };
+    addExpense({
+      ...expenseData,
+      amount: Number(expenseData.amount)
+    }, dispatch);
+
+    // dispatch(toggleExpense());
+    setExpenseData({
+      amount: 0,
+      description: "",
+      month: "",
+      category: "",
+      year: "",
+    });
+  };
 
   return (
     <Modal
@@ -51,7 +63,7 @@ const AddExpense: React.FC = () => {
       onRequestClose={() => dispatch(toggleExpense())}
       ariaHideApp={false}
     >
-      <FormHeader thunk={toggleExpense} heading="Add Expenses"/>
+      <FormHeader thunk={toggleExpense} heading="Add Expenses" />
 
       <div className="p-4 h-max">
         <form className="space-y-2">
@@ -89,9 +101,9 @@ const AddExpense: React.FC = () => {
                 Category
               </label>
               <select
-                id="type"
-                name="type"
-                value={expenseData.type}
+                id="category"
+                name="category"
+                value={expenseData.category}
                 onChange={handleFormData}
                 required
                 className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition appearance-none cursor-pointer"
@@ -125,18 +137,18 @@ const AddExpense: React.FC = () => {
                 className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition appearance-none cursor-pointer"
               >
                 <option value="">Select</option>
-                <option value="January">January</option>
-                <option value="February">February</option>
-                <option value="March">March</option>
-                <option value="April">April</option>
-                <option value="May">May</option>
-                <option value="June">June</option>
-                <option value="July">July</option>
-                <option value="August">August</option>
-                <option value="September">September</option>
-                <option value="October">October</option>
-                <option value="November">November</option>
-                <option value="December">December</option>
+                <option value="january">January</option>
+                <option value="february">February</option>
+                <option value="march">March</option>
+                <option value="april">April</option>
+                <option value="may">May</option>
+                <option value="june">June</option>
+                <option value="july">July</option>
+                <option value="august">August</option>
+                <option value="september">September</option>
+                <option value="october">October</option>
+                <option value="november">November</option>
+                <option value="december">December</option>
               </select>
             </div>
 
@@ -176,7 +188,7 @@ const AddExpense: React.FC = () => {
             className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition resize-none"
           />
 
-          <FormSubmitBtn func={() => {}} />
+          <FormSubmitBtn func={onSubmit} />
         </form>
       </div>
     </Modal>

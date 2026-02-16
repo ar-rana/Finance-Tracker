@@ -42,7 +42,7 @@ const AwardModal: React.FC = () => {
       year,
       award,
       user: user.user
-    }, dispatch);
+    }, user.user, dispatch);
 
     close();
   }
