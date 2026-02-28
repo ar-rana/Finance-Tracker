@@ -40,10 +40,6 @@ const Login: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(warn("The backend is not connect, just click on 'Continue with Google' to proceed & review"));
-  }, [])
-
   return (
     <div className="h-screen flex bg-gray-900 md:p-10 p-4">
       {/* Left Panel */}

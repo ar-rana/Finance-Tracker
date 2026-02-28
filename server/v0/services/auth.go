@@ -2,8 +2,12 @@ package service
 
 import (
 	"errors"
+	"net/http"
 	"os"
+	"strings"
 	"time"
+
+	"v0/pkg"
 
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -36,8 +40,6 @@ func VerifyToken(tokenString string) error {
 		return []byte(secretKey), nil
 	})
 
-	// log.Printf("Token Object: %v", token)
-
 	if err != nil {
 		return err
 	}
@@ -47,4 +49,29 @@ func VerifyToken(tokenString string) error {
 	}
 
 	return nil
+}
+
+func AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		authHeader := r.Header.Get("Authorization")
+		if authHeader == "" {
+			pkg.SendERR(w, nil, "Unauthorized - Missing Authorization Header")
+			return
+		}
+
+		parts := strings.Split(authHeader, " ")
+		if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
+			pkg.SendERR(w, nil, "Unauthorized - Invalid Authorization Header Format")
+			return
+		}
+
+		tokenString := parts[1]
+		err := VerifyToken(tokenString)
+		if err != nil {
+			pkg.SendERR(w, nil, "Unauthorized - "+err.Error())
+			return
+		}
+
+		next(w, r)
+	}
 }

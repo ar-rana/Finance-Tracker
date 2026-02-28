@@ -12,7 +12,7 @@ const SuccessModal: React.FC = () => {
         if (successOpen) {
             setTimeout(() => {
                 dispatch(closeSuccess());
-            }, 2500);
+            }, 2000);
         }
     }, [successOpen]);
 

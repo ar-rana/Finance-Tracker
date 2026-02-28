@@ -18,7 +18,7 @@ const SettingsModal: React.FC = () => {
   const [settings, setSettings] = useState<SettingsForm>({
     start: "",
     end: "",
-    budget: "",
+    budget: 0,
     graphs: ["Bar_Graphs", "Radar_Chart", "Pie_Chart", "Hollow_Pie_Chart", "Line_Graph", "Scatter_Plot", "Budget_Meter"],
   });
 
@@ -30,7 +30,7 @@ const SettingsModal: React.FC = () => {
     setSettings({
       ...settings,
       [name]: value,
-    });    
+    });
   };
 
   useEffect(() => {
@@ -56,8 +56,8 @@ const SettingsModal: React.FC = () => {
       onRequestClose={() => dispatch(toggleSettings())}
       ariaHideApp={false}
     >
-      <FormHeader thunk={toggleSettings} heading="Settings"/>
-      
+      <FormHeader thunk={toggleSettings} heading="Settings" />
+
       <div className="p-4 h-max">
         <form className="space-y-2">
           <div className="mb-6">
@@ -164,7 +164,7 @@ const SettingsModal: React.FC = () => {
             </div>
           </div>
 
-          <FormSubmitBtn func={() => {}} />
+          <FormSubmitBtn func={() => { }} />
         </form>
       </div>
     </Modal>

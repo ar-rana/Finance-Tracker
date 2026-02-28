@@ -14,6 +14,14 @@ export const userSlice = createSlice({
         setUser: (state, action: PayloadAction<UserState>) => {
             state.user = action.payload.user;
             state.token = action.payload.token;
+            localStorage.setItem("user", action.payload.user);
+            localStorage.setItem("token", action.payload.token);
+        },
+        clearUser: (state) => {
+            state.user = "";
+            state.token = "";
+            localStorage.removeItem("user");
+            localStorage.removeItem("token");
         },
         setAward: (state, action: PayloadAction<any>) => {
             if (!state.awards) state.awards = [];
@@ -25,6 +33,6 @@ export const userSlice = createSlice({
     },
 });
 
-export const { setUser, setAward, setAwards } = userSlice.actions;
+export const { setUser, clearUser, setAward, setAwards } = userSlice.actions;
 
 export default userSlice.reducer;

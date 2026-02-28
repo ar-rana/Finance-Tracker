@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"strings"
+	"time"
 	"v0/models"
 	"v0/pkg"
 	"v0/store"
@@ -14,8 +15,8 @@ import (
 var DefaultSettings = models.Settings{
 	GraphPreferences: []string{"Bar_Graphs", "Radar_Chart", "Line_Graph"},
 	Budget:           10000,
-	Start:            "",
-	End:              "",
+	Start:            time.Date(time.Now().Year(), time.Now().Month(), 1, 0, 0, 0, 0, time.Local).Format("02/01/2006"),
+	End:              time.Date(time.Now().Year(), time.Now().Month()+1, 0, 0, 0, 0, 0, time.Local).Format("02/01/2006"),
 }
 
 func CreateNewUser(item models.User) (map[string]any, error) {
@@ -37,11 +38,11 @@ func CreateNewUser(item models.User) (map[string]any, error) {
 	item.Id = id
 
 	// Hash password
-	// hashedPassword, err := pkg.Hash(item.Password)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// item.Password = hashedPassword
+	hashedPassword, err := pkg.Hash(item.Password)
+	if err != nil {
+		return nil, err
+	}
+	item.Password = hashedPassword
 
 	// Set default settings
 	item.Settings = DefaultSettings

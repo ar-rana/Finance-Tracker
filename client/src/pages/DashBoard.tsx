@@ -13,8 +13,10 @@ import DetailView from "../components/infoCards/DetailView";
 import SettingsModal from "../components/modal/SettingsModal";
 import AwardModal from "../components/modal/AwardModal";
 import BudgetMeter from "../components/charts/BudgetMeter";
-import { useAppSelector } from "../hooks/reduxHooks";
+import { useAppSelector, useAppDispatch } from "../hooks/reduxHooks";
 import { getAllSettingData, getAnalyticsModalState } from "../redux/selectors";
+import { getSettings } from "../api/userAPIs";
+import { getInflows, getExpenses } from "../api/inflow-outflow";
 import { Graphs } from "../types/Component";
 import DraggableModal from "../components/modal/DraggableModal";
 import { toggleAnalytics } from "../redux/modalSlice";
@@ -23,12 +25,20 @@ import AnalyticsForm from "../components/helpers/AnalyticsForm";
 const DashBoard: React.FC = () => {
   const graphStyleClass = useRef<string>("w-full h-68 bg-transparent flex justify-center align-middle p-1.5");
 
+  const dispatch = useAppDispatch();
   const settings = useAppSelector(getAllSettingData);
   const analyticsOpen = useAppSelector(getAnalyticsModalState);
 
   useEffect(() => {
-    console.log(settings.graphs.includes(Graphs.barGraph));
-  }, [settings]);
+    getSettings(dispatch);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (settings.start && settings.end) {
+      getInflows(settings.start, settings.end, dispatch);
+      getExpenses(settings.start, settings.end, dispatch);
+    }
+  }, [settings.start, settings.end, dispatch]);
 
   const settingCheck = (graph: string): boolean => {
     return settings.graphs.includes(graph);

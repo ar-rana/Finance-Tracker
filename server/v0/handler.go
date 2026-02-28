@@ -381,6 +381,17 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func AuthCheckHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		pkg.SendOK(w, nil, "Authenticated")
+		return
+	default:
+		pkg.SendERR(w, nil, "method not allowed")
+		return
+	}
+}
+
 func enableCORS(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		origin := r.Header.Get("Origin")
@@ -422,22 +433,25 @@ func main() {
 	// http.HandleFunc("/api/v0/db-connection-check", enableCORS(DBConnectionCheckHandler))
 
 	// EXPENSE
-	http.HandleFunc("/api/v0/expense", enableCORS(ExpenseHandler))
+	http.HandleFunc("/api/v0/expense", enableCORS(service.AuthMiddleware(ExpenseHandler)))
 
 	// INFLOW
-	http.HandleFunc("/api/v0/inflow", enableCORS(InflowHandler))
+	http.HandleFunc("/api/v0/inflow", enableCORS(service.AuthMiddleware(InflowHandler)))
 
 	// STOCK
-	http.HandleFunc("/api/v0/stock", enableCORS(StockHandler))
+	http.HandleFunc("/api/v0/stock", enableCORS(service.AuthMiddleware(StockHandler)))
 
 	// AWARD
-	http.HandleFunc("/api/v0/award", enableCORS(AwardHandler))
+	http.HandleFunc("/api/v0/award", enableCORS(service.AuthMiddleware(AwardHandler)))
 
 	// USER
-	// http.HandleFunc("/api/v0/user", enableCORS(UserHandler))
+	// http.HandleFunc("/api/v0/user", enableCORS(service.AuthMiddleware(UserHandler)))
 
 	// SETTINGS
-	http.HandleFunc("/api/v0/settings", enableCORS(SettingsHandler))
+	http.HandleFunc("/api/v0/settings", enableCORS(service.AuthMiddleware(SettingsHandler)))
+
+	// AUTH CHECK
+	http.HandleFunc("/api/v0/authcheck", enableCORS(service.AuthMiddleware(AuthCheckHandler)))
 
 	// Login
 	http.HandleFunc("/api/v0/login", enableCORS(LoginHandler))
