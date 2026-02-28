@@ -1,7 +1,10 @@
 package service
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
 	"os"
 	"strings"
@@ -32,23 +35,33 @@ func CreateToken(username string) (string, error) {
 	return tokenString, nil
 }
 
-func VerifyToken(tokenString string) error {
+func VerifyToken(tokenString string) (string, error) {
 	if secretKey == "" {
-		return errors.New("missing JWT variable KEY")
+		return "", errors.New("missing JWT variable KEY")
 	}
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return []byte(secretKey), nil
 	})
 
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	if !token.Valid {
-		return errors.New("invalid token")
+		return "", errors.New("invalid token")
 	}
 
-	return nil
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return "", errors.New("invalid token claims")
+	}
+
+	username, ok := claims["username"].(string)
+	if !ok {
+		return "", errors.New("username not found in token")
+	}
+
+	return username, nil
 }
 
 func AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
@@ -66,10 +79,35 @@ func AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 		}
 
 		tokenString := parts[1]
-		err := VerifyToken(tokenString)
+		username, err := VerifyToken(tokenString)
 		if err != nil {
 			pkg.SendERR(w, nil, "Unauthorized - "+err.Error())
 			return
+		}
+
+		r.Header.Set("X-Username", username)
+
+		if r.Method == http.MethodPost || r.Method == http.MethodPut || r.Method == http.MethodPatch {
+			bodyBytes, err := io.ReadAll(r.Body)
+			if err == nil {
+				r.Body.Close()
+				var bodyMap map[string]interface{}
+				if len(bodyBytes) > 0 {
+					if err := json.Unmarshal(bodyBytes, &bodyMap); err == nil {
+						bodyMap["username"] = username
+						newBodyBytes, _ := json.Marshal(bodyMap)
+						r.Body = io.NopCloser(bytes.NewBuffer(newBodyBytes))
+						r.ContentLength = int64(len(newBodyBytes))
+					} else {
+						r.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
+					}
+				} else {
+					bodyMap = map[string]interface{}{"username": username}
+					newBodyBytes, _ := json.Marshal(bodyMap)
+					r.Body = io.NopCloser(bytes.NewBuffer(newBodyBytes))
+					r.ContentLength = int64(len(newBodyBytes))
+				}
+			}
 		}
 
 		next(w, r)

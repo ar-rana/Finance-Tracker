@@ -71,7 +71,7 @@ func RemoveInflow(id string) (map[string]any, error) {
 	return pkg.ParseCosmosResponse(response.RawResponse.Body)
 }
 
-func GetInflows(startStr string, endStr string) ([]models.Inflow, error) {
+func GetInflows(startStr string, endStr string, username string) ([]models.Inflow, error) {
 	cosmosPartition := os.Getenv("COSMOS_INFLOW")
 	if cosmosPartition == "" {
 		return nil, errors.New("missing cosmos partition env var")
@@ -98,7 +98,7 @@ func GetInflows(startStr string, endStr string) ([]models.Inflow, error) {
 
 	for !current.After(end) {
 		y := current.Year()
-		m := current.Month().String()
+		m := strings.ToLower(current.Month().String())
 		yearMonths[y] = append(yearMonths[y], m)
 		current = current.AddDate(0, 1, 0)
 	}
@@ -116,7 +116,7 @@ func GetInflows(startStr string, endStr string) ([]models.Inflow, error) {
 		queryConditions = append(queryConditions, fmt.Sprintf("(c.year = '%d' AND c.month IN (%s))", year, mList))
 	}
 
-	queryString := "SELECT * FROM c WHERE c.live = @live"
+	queryString := "SELECT * FROM c WHERE c.live = @live AND c.username = @username"
 
 	if len(queryConditions) > 0 {
 		queryString += " AND (" + strings.Join(queryConditions, " OR ") + ")"
@@ -128,6 +128,7 @@ func GetInflows(startStr string, endStr string) ([]models.Inflow, error) {
 	query := azcosmos.QueryOptions{
 		QueryParameters: []azcosmos.QueryParameter{
 			{Name: "@live", Value: cosmosPartition},
+			{Name: "@username", Value: username},
 		},
 	}
 

@@ -76,11 +76,30 @@ func BodyParser[T any](w http.ResponseWriter, r *http.Request) (T, error) {
 }
 
 func ParseDate(dateStr string) (int, string, int, time.Time, error) {
-	// Support both / and - separators
-	normalizedDate := strings.ReplaceAll(dateStr, "-", "/")
-	t, err := time.Parse("02/01/2006", normalizedDate) // - date/month/year
+	var t time.Time
+	var err error
+
+	layouts := []string{
+		"02/01/2006",
+		"2006-01-02",
+		"02-01-2006",
+		"2006/01/02",
+	}
+
+	for _, layout := range layouts {
+		t, err = time.Parse(layout, dateStr)
+		if err == nil {
+			break
+		}
+	}
+
 	if err != nil {
-		return 0, "", 0, time.Time{}, err
+		// Support both / and - separators as fallback
+		normalizedDate := strings.ReplaceAll(dateStr, "-", "/")
+		t, err = time.Parse("02/01/2006", normalizedDate) // - date/month/year
+		if err != nil {
+			return 0, "", 0, time.Time{}, err
+		}
 	}
 
 	monthNames := []string{

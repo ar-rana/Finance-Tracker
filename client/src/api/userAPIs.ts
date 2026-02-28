@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { AppDispatch } from "../store";
-import { success, warn } from "../redux/modalSlice";
+import { success, toggleSettings, warn } from "../redux/modalSlice";
 import type { Response as ApiResponse } from "../types/APIData";
 import { setBudget, setDates, setGraphs } from "../redux/settingsSlice";
 import type { SettingsForm, AwardForm } from "../types/FormsData";
@@ -18,7 +18,8 @@ function getSettings(dispatch: AppDispatch) {
         const res = response.data;
 
         if (res.success) {
-            dispatch(setGraphs(res.data.graph_preferences));
+            console.log(JSON.stringify(res.data));
+            dispatch(setGraphs(res.data.graph_preferences || []));
             dispatch(setBudget(res.data.budget));
             dispatch(setDates({ start: res.data.start, end: res.data.end }));
         } else {
@@ -31,13 +32,21 @@ function getSettings(dispatch: AppDispatch) {
 }
 
 function updateSettings(settings: SettingsForm, dispatch: AppDispatch) {
-    axios.put<ApiResponse>(`${API_URL}/api/v0/settings`, settings).then((response) => {
+    const payload = {
+        graph_preferences: settings.graphs,
+        budget: typeof settings.budget === 'string' ? parseInt(settings.budget, 10) : settings.budget,
+        start: settings.start,
+        end: settings.end
+    };
+
+    axios.put<ApiResponse>(`${API_URL}/api/v0/settings`, payload).then((response) => {
         const res = response.data;
 
         if (res.success) {
-            dispatch(setGraphs(res.data.graph_preferences));
+            dispatch(setGraphs(res.data.graph_preferences || []));
             dispatch(setBudget(res.data.budget));
             dispatch(setDates({ start: res.data.start, end: res.data.end }));
+            dispatch(toggleSettings());
         } else {
             dispatch(warn(res.message));
         }

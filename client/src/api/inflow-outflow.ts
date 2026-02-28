@@ -34,6 +34,7 @@ function getExpenses(start: string, end: string, dispatch: AppDispatch) {
         const res = response.data;
 
         if (res.success) {
+            console.log("getExpenses: " + JSON.stringify(res.data, null, 2));
             dispatch(setExpenses(res.data));
         } else {
             dispatch(warn(res.message));
@@ -84,6 +85,7 @@ function getInflows(start: string, end: string, dispatch: AppDispatch) {
         const res = response.data;
 
         if (res.success) {
+            console.log("getInflows: " + JSON.stringify(res.data, null, 2));
             dispatch(setInflows(res.data));
         } else {
             dispatch(warn(res.message));

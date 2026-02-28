@@ -12,21 +12,24 @@ export const dataSlice = createSlice({
     initialState: initialState,
     reducers: {
         setStocks: (state, action: PayloadAction<any[]>) => {
-            state.stocks = action.payload;
+            state.stocks = action.payload || [];
         },
         setExpenses: (state, action: PayloadAction<any[]>) => {
-            state.expenses = action.payload;
+            state.expenses = action.payload || [];
         },
         setInflows: (state, action: PayloadAction<any[]>) => {
-            state.inflows = action.payload;
+            state.inflows = action.payload || [];
         },
         setStock: (state, action: PayloadAction<any>) => {
+            if (!state.stocks) state.stocks = [];
             state.stocks.push(action.payload);
         },
         setInflow: (state, action: PayloadAction<any>) => {
+            if (!state.inflows) state.inflows = [];
             state.inflows.push(action.payload);
         },
         setExpense: (state, action: PayloadAction<any>) => {
+            if (!state.expenses) state.expenses = [];
             state.expenses.push(action.payload);
         },
     },

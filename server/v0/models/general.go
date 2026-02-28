@@ -8,6 +8,7 @@ type Expense struct {
 	Month       string `json:"month"`
 	Description string `json:"description"`
 	Year        string `json:"year"`
+	User        string `json:"username"`
 }
 
 type Inflow struct {
@@ -19,6 +20,7 @@ type Inflow struct {
 	Month       string `json:"month"`
 	Description string `json:"description"`
 	Year        string `json:"year"`
+	User        string `json:"username"`
 }
 
 type Stocks struct {
@@ -33,6 +35,7 @@ type Stocks struct {
 	DateUnix    int64   `json:"dateUnix"`
 	Status      string  `json:"status"`
 	Description string  `json:"description"`
+	User        string  `json:"username"`
 }
 
 type Awards struct {

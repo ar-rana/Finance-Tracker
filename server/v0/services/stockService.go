@@ -19,7 +19,7 @@ func CreateNewStock(item models.Stocks) (map[string]any, error) {
 		return nil, err
 	}
 	item.DateUnix = t.Unix()
-	
+
 	return store.CreateStock(item)
 }
 
@@ -27,7 +27,7 @@ func RemoveStockItem(id string) (map[string]any, error) {
 	return store.RemoveStock(id)
 }
 
-func GetStocksRange(start string, end string) ([]models.Stocks, error) {
+func GetStocksRange(start string, end string, username string) ([]models.Stocks, error) {
 
 	_, _, _, startTime, err := pkg.ParseDate(start)
 	if err != nil {
@@ -41,6 +41,6 @@ func GetStocksRange(start string, end string) ([]models.Stocks, error) {
 	// Use Unix timestamps for range comparison in Cosmos DB
 	startTS := startTime.Unix()
 	endTS := endTime.Unix()
-	
-	return store.GetStocks(startTS, endTS)
+
+	return store.GetStocks(startTS, endTS, username)
 }

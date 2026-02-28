@@ -73,12 +73,13 @@ func ExpenseHandler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		start := r.URL.Query().Get("start")
 		end := r.URL.Query().Get("end")
+		username := r.Header.Get("X-Username")
 		if start == "" || end == "" {
 			pkg.SendERR(w, nil, "start and end dates are required")
 			return
 		}
 
-		result, err := service.GetExpensesRange(start, end)
+		result, err := service.GetExpensesRange(start, end, username)
 		if err != nil {
 			pkg.SendERR(w, nil, err.Error())
 			return
@@ -123,12 +124,13 @@ func InflowHandler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		start := r.URL.Query().Get("start")
 		end := r.URL.Query().Get("end")
+		username := r.Header.Get("X-Username")
 		if start == "" || end == "" {
 			pkg.SendERR(w, nil, "start and end dates are required")
 			return
 		}
 
-		result, err := service.GetInflowsRange(start, end)
+		result, err := service.GetInflowsRange(start, end, username)
 		if err != nil {
 			pkg.SendERR(w, nil, err.Error())
 			return
@@ -173,12 +175,13 @@ func StockHandler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		start := r.URL.Query().Get("start")
 		end := r.URL.Query().Get("end")
+		username := r.Header.Get("X-Username")
 		if start == "" || end == "" {
 			pkg.SendERR(w, nil, "start and end dates are required")
 			return
 		}
 
-		result, err := service.GetStocksRange(start, end)
+		result, err := service.GetStocksRange(start, end, username)
 		if err != nil {
 			pkg.SendERR(w, nil, err.Error())
 			return
@@ -194,7 +197,7 @@ func StockHandler(w http.ResponseWriter, r *http.Request) {
 func AwardHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		user := r.URL.Query().Get("user")
+		user := r.Header.Get("X-Username")
 		if user == "" {
 			pkg.SendERR(w, nil, "user is required")
 			return
@@ -278,7 +281,7 @@ func AwardHandler(w http.ResponseWriter, r *http.Request) {
 func SettingsHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		user := r.URL.Query().Get("user")
+		user := r.Header.Get("X-Username")
 		user = strings.TrimSpace(user)
 		if user == "" {
 			pkg.SendERR(w, nil, "username is required")
@@ -292,7 +295,7 @@ func SettingsHandler(w http.ResponseWriter, r *http.Request) {
 		pkg.SendOK(w, result, "Settings fetched successfully")
 		return
 	case http.MethodPut:
-		user := r.URL.Query().Get("user")
+		user := r.Header.Get("X-Username")
 		user = strings.TrimSpace(user)
 		if user == "" {
 			pkg.SendERR(w, nil, "username is required")

@@ -68,7 +68,7 @@ func RemoveStock(id string) (map[string]any, error) {
 	return pkg.ParseCosmosResponse(response.RawResponse.Body)
 }
 
-func GetStocks(start int64, end int64) ([]models.Stocks, error) {
+func GetStocks(start int64, end int64, username string) ([]models.Stocks, error) {
 	cosmosPartition := os.Getenv("COSMOS_STOCKS")
 	if cosmosPartition == "" {
 		return nil, errors.New("missing cosmos partition env var")
@@ -79,14 +79,15 @@ func GetStocks(start int64, end int64) ([]models.Stocks, error) {
 		return nil, err
 	}
 
-	queryString := "SELECT * FROM c WHERE c.live = @live AND c.dateUnix >= @start AND c.dateUnix <= @end"
-	
+	queryString := "SELECT * FROM c WHERE c.live = @live AND c.username = @username AND c.dateUnix >= @start AND c.dateUnix <= @end"
+
 	log.Printf("Query: %s", queryString)
 
 	partitionKey := azcosmos.NewPartitionKeyString(cosmosPartition)
 	query := azcosmos.QueryOptions{
 		QueryParameters: []azcosmos.QueryParameter{
 			{Name: "@live", Value: cosmosPartition},
+			{Name: "@username", Value: username},
 			{Name: "@start", Value: start},
 			{Name: "@end", Value: end},
 		},
