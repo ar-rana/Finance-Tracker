@@ -21,6 +21,8 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      VITE_BASE_URL: https://finup-fegsgjg3hhgwfqbu.centralindia-01.azurewebsites.net
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
