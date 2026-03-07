@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAppDispatch } from "../hooks/reduxHooks";
-import { toggleAnalytics, toggleAward, toggleExpense, toggleInflow, toggleSettings, toggleStocks, success, setTime } from "../redux/modalSlice";
+import { toggleAnalytics, toggleAward, toggleExpense, toggleInflow, toggleSettings, success, setTime } from "../redux/modalSlice";
 import { setDates } from "../redux/settingsSlice";
 
 const Navbar: React.FC = () => {
@@ -37,6 +37,12 @@ const Navbar: React.FC = () => {
     setTimeout(() => {
       dispatch(setTime(2000));
     }, 3400);
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.reload();
   }
 
   return (
@@ -130,7 +136,7 @@ const Navbar: React.FC = () => {
               </button>
             </li>
             <li className="mb-2">
-              <button className="w-full text-left flex items-center h-10 px-4 py-4 hover:bg-red-50 rounded transition">
+              <button onClick={handleLogout} className="w-full text-left flex items-center h-10 px-4 py-4 hover:bg-red-50 rounded transition">
                 <i className="fa fa-sign-out text-red-600 text-center" />
                 {expanded && <span className="ml-3 text-gray-800 text-sm font-bold">Logout</span>}
               </button>

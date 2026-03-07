@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import finup_bg from "../assets/finup_bg.png";
 import finup_logo from "../assets/finup_logo.jpg";
 import logo from "../assets/logo.png";
