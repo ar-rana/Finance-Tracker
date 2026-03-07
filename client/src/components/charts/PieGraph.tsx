@@ -4,13 +4,8 @@ import { useAppSelector } from '../../hooks/reduxHooks';
 import { getExpenses, getInflows, getAllSettingData } from '../../redux/selectors';
 import { INCOME_COLOR, EXPENSE_COLOR } from '../helpers/ColorToggleBtn';
 import { parsePieData, parseIncomePieData, getMonthsInRange } from '../../utils/chartParsers';
+import { fmtVal } from '../../utils/formatters';
 
-// Compact Indian-style: 100 → "100", 10000 → "10k", 150000 → "1.5L"
-const fmtVal = (val: number): string => {
-  if (val >= 100000) return `${(val / 100000).toFixed(1)}L`;
-  if (val >= 1000) return `${(val / 1000).toFixed(1)}k`;
-  return String(val);
-};
 
 // Label shows ONLY the formatted number, no category name
 const renderLabel = ({ cx, cy, midAngle, outerRadius, value }: any) => {
@@ -41,13 +36,13 @@ const SinglePie = ({ data, color }: { data: any[]; color: string }) => (
         data={data}
         cx="50%"
         cy="50%"
-        outerRadius={55}
+        outerRadius={52}
         fill={color}
         label={renderLabel}
         labelLine={false}
       />
       <Tooltip
-        formatter={(val: any, name: any) => [`₹${Number(val).toLocaleString()}`, name]}
+        formatter={(val: any, name: any) => [`₹${fmtVal(Number(val))}`, name]}
       />
     </PieChart>
   </ResponsiveContainer>
@@ -109,7 +104,7 @@ const PieGraph = () => {
           No Data Available
         </div>
       ) : (
-        <div className="flex flex-1 w-full min-h-0 pt-6 bg-transparent border-transparent">
+        <div className="flex flex-1 w-full min-h-0 pt-6 gap-1 bg-transparent border-transparent">
           <div className="flex-1 h-full min-w-0 bg-transparent border-transparent">
             {noIncome
               ? <div className="flex items-center justify-center h-full text-xs text-gray-400 bg-transparent border-transparent">No Income</div>
