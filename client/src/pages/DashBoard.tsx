@@ -12,6 +12,7 @@ import ScatterPlot from "../components/charts/ScatterPlot";
 import DetailView from "../components/infoCards/DetailView";
 import SettingsModal from "../components/modal/SettingsModal";
 import AwardModal from "../components/modal/AwardModal";
+import AwardsViewer from "../components/modal/AwardsViewer";
 import BudgetMeter from "../components/charts/BudgetMeter";
 import { useAppSelector, useAppDispatch } from "../hooks/reduxHooks";
 import { getAllSettingData, getAnalyticsModalState } from "../redux/selectors";
@@ -98,6 +99,7 @@ const DashBoard: React.FC = () => {
         <StocksModal />
         <SettingsModal />
         <AwardModal />
+        <AwardsViewer />
         <DraggableModal heading="Analytics" isOpen={analyticsOpen} thunk={toggleAnalytics}>
           <AnalyticsForm />
         </DraggableModal>

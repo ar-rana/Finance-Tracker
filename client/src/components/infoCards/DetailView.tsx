@@ -6,6 +6,20 @@ import { ExpenseCategories, InflowSources } from "../../types/FormsData";
 
 const months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
 
+const getEntryId = (entry: any): string | undefined => entry?.id || entry?._id;
+
+const getEntryTime = (entry: any): number => {
+  if (entry?.createdAt) {
+    const ts = Date.parse(entry.createdAt);
+    if (!Number.isNaN(ts)) return ts;
+  }
+
+  const year = Number(entry?.year) || 0;
+  const monthIdx = months.indexOf(String(entry?.month || "").toLowerCase());
+  const day = Number(entry?.day) || 0;
+  return new Date(year, Math.max(monthIdx, 0), day).getTime();
+};
+
 const DropdownCheckbox: React.FC<{
   label: string;
   options: string[];
@@ -120,7 +134,7 @@ const DetailView: React.FC = () => {
   const allEntries = [
     ...filteredInflows.map(i => ({ ...i, entryType: 'income' as const })),
     ...filteredExpenses.map(e => ({ ...e, entryType: 'expense' as const }))
-  ];
+  ].sort((a, b) => getEntryTime(b) - getEntryTime(a));
 
   const totalInflow = filteredInflows.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0);
   const totalOutflow = filteredExpenses.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0);
@@ -209,8 +223,8 @@ const DetailView: React.FC = () => {
           ) : (
             allEntries.map((entry: any) => (
               <LatestEntry
-                key={entry.id}
-                id={entry.id}
+                key={getEntryId(entry) || `${entry.entryType}-${entry.month}-${entry.year}-${entry.day}-${entry.amount}-${entry.description}`}
+                id={getEntryId(entry)}
                 type={entry.entryType}
                 title={entry.entryType === 'income' ? (entry.source || 'Inflow') : (entry.category || 'Expense')}
                 amount={`₹${(Number(entry.amount) || 0).toLocaleString()}`}

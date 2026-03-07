@@ -14,6 +14,7 @@ export interface ReduxModalState {
     stocksOpen: boolean;
     settingsOpen: boolean;
     awardOpen: boolean;
+    awardsViewerOpen: boolean;
     warningOpen: boolean;
     analyticsOpen: boolean;
     successOpen: boolean;

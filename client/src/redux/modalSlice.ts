@@ -3,6 +3,7 @@ import { Slices, type ReduxModalState } from "../types/ReduxData";
 
 const initialState: ReduxModalState = {
     awardOpen: false,
+    awardsViewerOpen: false,
     inflowOpen: false,
     expenseOpen: false,
     settingsOpen: false,
@@ -21,6 +22,9 @@ export const modalSlice = createSlice({
     reducers: {
         toggleAward: (state) => {
             state.awardOpen = !state.awardOpen;
+        },
+        toggleAwardsViewer: (state) => {
+            state.awardsViewerOpen = !state.awardsViewerOpen;
         },
         toggleInflow: (state) => {
             state.inflowOpen = !state.inflowOpen;
@@ -57,6 +61,6 @@ export const modalSlice = createSlice({
     }
 })
 
-export const { toggleAward, toggleExpense, toggleInflow, toggleSettings, toggleStocks, toggleAnalytics, warn, closeWarn, closeSuccess, success, setTime } = modalSlice.actions
+export const { toggleAward, toggleAwardsViewer, toggleExpense, toggleInflow, toggleSettings, toggleStocks, toggleAnalytics, warn, closeWarn, closeSuccess, success, setTime } = modalSlice.actions
 
 export default modalSlice.reducer

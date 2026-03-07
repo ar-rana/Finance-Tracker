@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAppDispatch } from "../hooks/reduxHooks";
-import { toggleAnalytics, toggleAward, toggleExpense, toggleInflow, toggleSettings, success, setTime } from "../redux/modalSlice";
+import { toggleAnalytics, toggleAward, toggleAwardsViewer, toggleExpense, toggleInflow, toggleSettings, success, setTime } from "../redux/modalSlice";
 import { setDates } from "../redux/settingsSlice";
 
 const Navbar: React.FC = () => {
@@ -119,6 +119,15 @@ const Navbar: React.FC = () => {
                 {expanded && <span className="ml-3 text-gray-800 text-sm font-semibold">Investment Analysis</span>} 
               </button>
             </li> */}
+            <li className="mb-1">
+              <button
+                onClick={() => dispatch(toggleAwardsViewer())}
+                className="w-full text-left flex items-center h-10 px-4 py-2 hover:bg-green-50 rounded transition"
+              >
+                <i className="fa fa-star text-green-600 text-center" />
+                {expanded && <span className="ml-3 text-gray-800 text-sm font-semibold">My Awards</span>}
+              </button>
+            </li>
             <li className="mb-1">
               <button
                 onClick={() => dispatch(toggleAnalytics())}

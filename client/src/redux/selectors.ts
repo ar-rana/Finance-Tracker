@@ -5,6 +5,7 @@ import type { ReduxModalState } from "../types/ReduxData";
 export const getAllModalStates = (state: RootState): ReduxModalState => {
     return {
         awardOpen: state.modals.awardOpen,
+        awardsViewerOpen: state.modals.awardsViewerOpen,
         expenseOpen: state.modals.expenseOpen,
         inflowOpen: state.modals.inflowOpen,
         settingsOpen: state.modals.settingsOpen,
@@ -16,6 +17,7 @@ export const getAllModalStates = (state: RootState): ReduxModalState => {
 };
 
 export const getAwardModalState = (state: RootState) => state.modals.awardOpen;
+export const getAwardsViewerModalState = (state: RootState) => state.modals.awardsViewerOpen;
 export const getAnalyticsModalState = (state: RootState) => state.modals.analyticsOpen;
 export const getExpenseModalState = (state: RootState) => state.modals.expenseOpen;
 export const getInflowModalState = (state: RootState) => state.modals.inflowOpen;

@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { AppDispatch } from "../store";
-import { success, toggleSettings, warn } from "../redux/modalSlice";
+import { setTime, success, toggleSettings, warn } from "../redux/modalSlice";
 import type { Response as ApiResponse } from "../types/APIData";
 import { setBudget, setDates, setGraphs } from "../redux/settingsSlice";
 import type { SettingsForm, AwardForm } from "../types/FormsData";
@@ -98,7 +98,11 @@ function addAward(award: AwardForm, user: string, dispatch: AppDispatch) {
 
         if (res.success) {
             dispatch(setAward(res.data));
-            dispatch(success("Congratulations! On your new award"));
+            dispatch(setTime(3000));
+            dispatch(success("（づ￣3￣）づ╭❤️～ Congratulations! On your new award"));
+            setTimeout(() => {
+                dispatch(setTime(2000));
+            }, 3050)
         } else {
             dispatch(warn(res.message));
         }
