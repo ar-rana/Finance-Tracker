@@ -6,7 +6,7 @@ import { INCOME_COLOR, EXPENSE_COLOR } from '../helpers/ColorToggleBtn';
 
 const RadarGraph = () => {
   const data = useAppSelector(getRadarData);
-  if (!data || data.length === 0) return <div>No Data Available for Radar</div>;
+  if (!data || data.length === 0) return <div className="flex justify-center items-center w-full h-full bg-white">No Data Available for Radar</div>;
 
   return (
     <ResponsiveContainer width="100%" height="100%" className={`bg-white`}>

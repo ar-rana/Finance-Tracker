@@ -5,7 +5,7 @@ import { getLineData } from '../../redux/selectors';
 
 const LineGraph = () => {
   const data = useAppSelector(getLineData);
-  if (!data || data.length === 0) return <div>No Data Available for Line Graph</div>;
+  if (!data || data.length === 0) return <div className="flex justify-center items-center w-full h-full bg-white">No Data Available for Line Graph</div>;
 
   return (
     <ResponsiveContainer width="100%" height="100%" className={`bg-white`}>

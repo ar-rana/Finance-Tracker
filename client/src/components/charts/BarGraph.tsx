@@ -10,7 +10,7 @@ const monthOrder = ["january", "february", "march", "april", "may", "june", "jul
 const BarGraph: React.FC = () => {
   const rawData = useAppSelector(getCategoryBarData);
 
-  if (!rawData || rawData.length === 0) return <div className="flex justify-center items-center h-full">No Data Available for Bar Graph</div>;
+  if (!rawData || rawData.length === 0) return <div className="flex justify-center items-center w-full h-full bg-white">No Data Available for Bar Graph</div>;
 
   // Sort data by month order and add a uniqueKey to avoid Recharts hover overlap
   const data = [...rawData].sort((a, b) => {

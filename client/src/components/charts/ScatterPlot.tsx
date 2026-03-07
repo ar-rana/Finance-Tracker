@@ -25,7 +25,7 @@ const ScatterPlot = () => {
   return (
     <ColorToggleBtn inData={inData} outData={outData}>
       {({ data, color, label }) => {
-        if (!data || data.length === 0) return <div className="flex justify-center items-center h-full">No Data Available for Scatter</div>;
+        if (!data || data.length === 0) return <div className="flex justify-center items-center w-full h-full bg-white">No Data Available for Scatter</div>;
 
         return (
           <ResponsiveContainer width="100%" height="100%" className={`bg-white`}>

@@ -10,11 +10,11 @@ const WarningModal: React.FC = () => {
 
   return (
     <Modal
-      className="z-50 fixed w-[30%] left-1/2 right-1/2 top-1/5 transform -translate-x-1/2 shadow-2xl rounded-2xl overflow-auto bg-white border-2 border-black scrollbar-hide"
+      className="z-[100] fixed w-[30%] left-1/2 right-1/2 top-1/5 transform -translate-x-1/2 shadow-2xl rounded-2xl overflow-auto bg-white border-2 border-black scrollbar-hide"
       style={{
         overlay: {
           backgroundColor: "transparent",
-          zIndex: 50,
+          zIndex: 1000,
         },
       }}
       isOpen={warningOpen}
