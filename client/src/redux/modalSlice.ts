@@ -12,6 +12,7 @@ const initialState: ReduxModalState = {
     successOpen: false,
     success: "",
     warning: "",
+    time: 2000,
 }
 
 export const modalSlice = createSlice({
@@ -42,6 +43,9 @@ export const modalSlice = createSlice({
         closeSuccess: (state) => {
             state.successOpen = false;
         },
+        setTime: (state, action: PayloadAction<number>) => {
+            state.time = action.payload;
+        },
         success: (state, action: PayloadAction<string>) => {
             state.successOpen = !state.successOpen;
             state.success = action.payload;
@@ -53,6 +57,6 @@ export const modalSlice = createSlice({
     }
 })
 
-export const { toggleAward, toggleExpense, toggleInflow, toggleSettings, toggleStocks, toggleAnalytics, warn, closeWarn, closeSuccess, success } = modalSlice.actions
+export const { toggleAward, toggleExpense, toggleInflow, toggleSettings, toggleStocks, toggleAnalytics, warn, closeWarn, closeSuccess, success, setTime } = modalSlice.actions
 
 export default modalSlice.reducer

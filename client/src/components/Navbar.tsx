@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAppDispatch } from "../hooks/reduxHooks";
-import { toggleAnalytics, toggleAward, toggleExpense, toggleInflow, toggleSettings, toggleStocks } from "../redux/modalSlice";
+import { toggleAnalytics, toggleAward, toggleExpense, toggleInflow, toggleSettings, toggleStocks, success, setTime } from "../redux/modalSlice";
 import { setDates } from "../redux/settingsSlice";
 
 const Navbar: React.FC = () => {
@@ -25,19 +25,25 @@ const Navbar: React.FC = () => {
       return;
     }
     const pad = (n: number) => String(n).padStart(2, "0");
-    start = `${start.getFullYear()}-${pad(start.getMonth() + 1)}-${pad(start.getDate())}`;
-    end = `${end.getFullYear()}-${pad(end.getMonth() + 1)}-${pad(end.getDate())}`;
-    console.log("start: ", start);
-    console.log("end: ", end);
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const startStr = `${monthNames[(start as Date).getMonth()]} ${(start as Date).getFullYear()}`;
+    const endStr = `${monthNames[(end as Date).getMonth()]} ${(end as Date).getFullYear()}`;
+
+    start = `${(start as Date).getFullYear()}-${pad((start as Date).getMonth() + 1)}-${pad((start as Date).getDate())}`;
+    end = `${(end as Date).getFullYear()}-${pad((end as Date).getMonth() + 1)}-${pad((end as Date).getDate())}`;
     dispatch(setDates({ start, end }));
+    dispatch(setTime(3300));
+    dispatch(success(`Global Timeline set: ${startStr} to ${endStr}`));
+    setTimeout(() => {
+      dispatch(setTime(2000));
+    }, 3400);
   }
-  
+
   return (
     <div className="flex h-screen bg-transparent max-h-screen fixed z-100">
       <div
-        className={`bg-white border-r border-gray-200 transition-all duration-300 flex flex-col h-full ${
-          expanded ? "w-48" : "w-12"
-        } shadow-lg`}
+        className={`bg-white border-r border-gray-200 transition-all duration-300 flex flex-col h-full ${expanded ? "w-48" : "w-12"
+          } shadow-lg`}
       >
         <button
           className="p-2 focus:outline-none hover:bg-green-50 font-bold"
@@ -47,9 +53,8 @@ const Navbar: React.FC = () => {
           }}
         >
           <i
-            className={`fa ${
-              expanded ? "fa-angle-left" : "fa-angle-right"
-            } text-green-600 text-xl fa-lg`}
+            className={`fa ${expanded ? "fa-angle-left" : "fa-angle-right"
+              } text-green-600 text-xl fa-lg`}
           />
         </button>
         <nav className="flex-1 mt-4">
@@ -71,17 +76,17 @@ const Navbar: React.FC = () => {
                 {expanded && <span className="ml-3 text-gray-800 text-sm font-semibold" onClick={() => setTimeline(prev => !prev)}>Global Timeline</span>}
               </button>
               {timeline && (
-                  <ul className="flex flex-col text-sm">
-                    <li onClick={() => handleGlobalTimeline("week")} className="text-left flex items-center ml-9 px-2 font-mono hover:bg-gray-100 cursor-pointer">This Week</li>
-                    <li onClick={() => handleGlobalTimeline("month")} className="text-left flex items-center ml-9 px-2 font-mono hover:bg-gray-100 cursor-pointer">This Month</li>
-                    <li onClick={() => handleGlobalTimeline("year")} className="text-left flex items-center ml-9 px-2 font-mono hover:bg-gray-100 cursor-pointer">This Year</li>
-                    <li onClick={() => handleGlobalTimeline("")} className="text-left flex items-center ml-9 px-2 font-mono hover:bg-gray-100 cursor-pointer">Custome</li>
-                  </ul>
-                )
+                <ul className="flex flex-col text-sm">
+                  <li onClick={() => handleGlobalTimeline("week")} className="text-left flex items-center ml-9 px-2 font-mono hover:bg-gray-100 cursor-pointer">This Week</li>
+                  <li onClick={() => handleGlobalTimeline("month")} className="text-left flex items-center ml-9 px-2 font-mono hover:bg-gray-100 cursor-pointer">This Month</li>
+                  <li onClick={() => handleGlobalTimeline("year")} className="text-left flex items-center ml-9 px-2 font-mono hover:bg-gray-100 cursor-pointer">This Year</li>
+                  <li onClick={() => handleGlobalTimeline("")} className="text-left flex items-center ml-9 px-2 font-mono hover:bg-gray-100 cursor-pointer">Custome</li>
+                </ul>
+              )
               }
             </li>
             <li className="mb-1">
-              <button 
+              <button
                 onClick={() => dispatch(toggleExpense())}
                 className="w-full text-left flex items-center h-10 px-4 py-2 hover:bg-green-50 rounded transition"
               >
@@ -90,7 +95,7 @@ const Navbar: React.FC = () => {
               </button>
             </li>
             <li className="mb-1">
-              <button 
+              <button
                 onClick={() => dispatch(toggleInflow())}
                 className="w-full text-left flex items-center h-10 px-4 py-2 hover:bg-green-50 rounded transition"
               >
@@ -98,18 +103,18 @@ const Navbar: React.FC = () => {
                 {expanded && <span className="ml-3 text-gray-800 text-sm font-semibold">Add Inflow</span>}
               </button>
             </li>
-            <li className="mb-1">
+            {/* fetch all BSE & NSE stocks from somewhere */}
+            {/* <li className="mb-1">
               <button 
                 onClick={() => dispatch(toggleStocks())}
                 className="w-full text-left flex items-center h-10 px-4 py-2 hover:bg-green-50 rounded transition"
               >
                 <i className="fa fa-bar-chart text-green-600 text-center" />
                 {expanded && <span className="ml-3 text-gray-800 text-sm font-semibold">Investment Analysis</span>} 
-                {/* fetch all BSE & NSE stocks from somewhere */}
               </button>
-            </li>
+            </li> */}
             <li className="mb-1">
-              <button 
+              <button
                 onClick={() => dispatch(toggleAnalytics())}
                 className="w-full text-left flex items-center h-10 px-4 py-2 hover:bg-green-50 rounded transition"
               >

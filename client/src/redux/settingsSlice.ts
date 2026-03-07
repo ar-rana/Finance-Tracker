@@ -6,7 +6,7 @@ const initialState: ReduxSettingState = {
   settings: {
     start: "",
     end: "",
-    budget: "",
+    budget: 0,
     graphs: ["Bar_Graphs", "Radar_Chart", "Pie_Chart", "Hollow_Pie_Chart", "Line_Graph", "Scatter_Plot", "Budget_Meter"],
   },
 };
@@ -26,7 +26,7 @@ export const settingsSlice = createSlice({
       state.settings.start = action.payload.start;
       state.settings.end = action.payload.end;
     },
-    setBudget: (state, action: PayloadAction<string>) => {
+    setBudget: (state, action: PayloadAction<number>) => {
       state.settings.budget = action.payload;
     },
   },

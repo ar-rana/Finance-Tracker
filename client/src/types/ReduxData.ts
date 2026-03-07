@@ -19,6 +19,7 @@ export interface ReduxModalState {
     successOpen: boolean;
     success?: string;
     warning?: string;
+    time?: number;
 }
 
 export interface ReduxSettingState {

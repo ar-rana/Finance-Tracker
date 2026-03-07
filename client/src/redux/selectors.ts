@@ -29,6 +29,7 @@ export const getWarningModalState = (state: RootState) => {
 };
 export const getSuccessModalState = (state: RootState) => {
     return {
+        time: state.modals.time || 2000,
         successOpen: state.modals.successOpen,
         success: state.modals.success,
     }

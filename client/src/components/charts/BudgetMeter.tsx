@@ -97,7 +97,13 @@ const BudgetMeter = ({ isAnimationActive = true }: { isAnimationActive?: boolean
         />
         {needle({ value: needleValue, cx, cy, iR, oR, color: "#000000", gaugeMax })}
         <Legend />
-        <Tooltip />
+        <Tooltip
+          formatter={(value: any, name: any) => {
+            if (name === "No Hope") return ["(┬┬﹏┬┬)", name];
+            const percent = ((value / budget) * 100).toFixed(0);
+            return [`${percent}%`, name];
+          }}
+        />
       </PieChart>
     </ResponsiveContainer>
   );

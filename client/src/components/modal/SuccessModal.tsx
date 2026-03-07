@@ -6,13 +6,13 @@ import { closeSuccess } from "../../redux/modalSlice";
 
 const SuccessModal: React.FC = () => {
     const dispatch = useAppDispatch();
-    const { successOpen, success } = useAppSelector(getSuccessModalState);
+    const { successOpen, success, time } = useAppSelector(getSuccessModalState);
 
     useEffect(() => {
         if (successOpen) {
             setTimeout(() => {
                 dispatch(closeSuccess());
-            }, 2000);
+            }, time);
         }
     }, [successOpen]);
 

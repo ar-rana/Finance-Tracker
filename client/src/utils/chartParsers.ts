@@ -283,3 +283,31 @@ export const parseScatterData = (expenses: any[]) => {
             };
         });
 };
+
+export const getMonthsInRange = (startDate: string, endDate: string) => {
+    if (!startDate || !endDate) return [];
+
+    // Convert YYYY-MM-DD or whatever to Date safely
+    const startObj = new Date(startDate);
+    const endObj = new Date(endDate);
+    if (isNaN(startObj.getTime()) || isNaN(endObj.getTime())) return [];
+
+    const months = [];
+    const current = new Date(startObj);
+    current.setDate(1); // Set to 1st so month increments don't skip February
+
+    const monthNames = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+
+    while (current <= endObj || (current.getMonth() === endObj.getMonth() && current.getFullYear() === endObj.getFullYear())) {
+        const monthNum = current.getMonth();
+        const year = current.getFullYear();
+        const abbr = monthNames[monthNum].charAt(0).toUpperCase() + monthNames[monthNum].slice(1, 4);
+        months.push({
+            label: `${abbr} ${year}`,
+            monthValue: monthNames[monthNum],
+            yearValue: String(year)
+        });
+        current.setMonth(current.getMonth() + 1);
+    }
+    return months;
+};
