@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import type { AddExpenseForm } from "../../types/FormsData";
+import { ExpenseCategories } from "../../types/FormsData";
 import FormSubmitBtn from "../helpers/FormSubmitBtn";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { getExpenseModalState } from "../../redux/selectors";
@@ -19,7 +20,21 @@ const AddExpense: React.FC = () => {
     month: "",
     category: "",
     year: "",
+    day: "",
   });
+
+  useEffect(() => {
+    if (openState) {
+      const now = new Date();
+      const monthNames = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+      setExpenseData(prev => ({
+        ...prev,
+        month: monthNames[now.getMonth()],
+        year: now.getFullYear().toString(),
+        day: "", // Reset day or keep it optional
+      }));
+    }
+  }, [openState]);
 
   const handleFormData = (e: any): void => {
     const { name, value } = e.target;
@@ -38,7 +53,8 @@ const AddExpense: React.FC = () => {
 
     addExpense({
       ...expenseData,
-      amount: Number(expenseData.amount)
+      amount: Number(expenseData.amount),
+      day: Number(expenseData.day) || 0
     }, dispatch);
 
     // dispatch(toggleExpense());
@@ -48,6 +64,7 @@ const AddExpense: React.FC = () => {
       month: "",
       category: "",
       year: "",
+      day: "",
     });
   };
 
@@ -57,6 +74,7 @@ const AddExpense: React.FC = () => {
       style={{
         overlay: {
           backgroundColor: "transparent",
+          zIndex: 50,
         },
       }}
       isOpen={openState}
@@ -109,18 +127,14 @@ const AddExpense: React.FC = () => {
                 className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition appearance-none cursor-pointer"
               >
                 <option value="">Select</option>
-                <option value="Investment">Investment</option>
-                <option value="Policies">Policies</option>
-                <option value="Home">Home Expense</option>
-                <option value="Loan_Saving">Loan Saving</option>
-                <option value="Travel">Travel</option>
-                <option value="Miscellaneous">Miscellaneous</option>
-                <option value="Other">Other</option>
+                {ExpenseCategories.map((cat) => (
+                  <option key={cat} value={cat}>{cat.replace("_", " ")}</option>
+                ))}
               </select>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <label
                 htmlFor="month"
@@ -169,6 +183,50 @@ const AddExpense: React.FC = () => {
                 placeholder="0000"
                 className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               />
+            </div>
+
+            <div>
+              <label
+                htmlFor="day"
+                className="block text-sm font-medium text-white mb-2"
+              >
+                Day
+              </label>
+              <div className="relative">
+                <input
+                  id="day"
+                  name="day"
+                  type="number"
+                  min="1"
+                  max="31"
+                  value={expenseData.day}
+                  onChange={handleFormData}
+                  placeholder="DD"
+                  className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition pr-10"
+                />
+                <div className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 w-6 h-6 overflow-hidden">
+                  <input
+                    type="date"
+                    className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                    onChange={(e) => {
+                      const date = new Date(e.target.value);
+                      if (!isNaN(date.getTime())) {
+                        const day = date.getDate();
+                        const year = date.getFullYear();
+                        const monthNames = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+                        const month = monthNames[date.getMonth()];
+                        setExpenseData({
+                          ...expenseData,
+                          day,
+                          month,
+                          year: year.toString(),
+                        });
+                      }
+                    }}
+                  />
+                  <i className="fa fa-calendar w-full h-full flex items-center justify-center pointer-events-none text-gray-500"></i>
+                </div>
+              </div>
             </div>
           </div>
 

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import type { InflowForm } from "../../types/FormsData";
+import { InflowSources } from "../../types/FormsData";
 import FormSubmitBtn from "../helpers/FormSubmitBtn";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { getInflowModalState } from "../../redux/selectors";
@@ -18,7 +19,21 @@ const AddInflow: React.FC = () => {
     month: "",
     source: "",
     year: "",
+    day: "",
   });
+
+  useEffect(() => {
+    if (openState) {
+      const now = new Date();
+      const monthNames = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+      setInflowData(prev => ({
+        ...prev,
+        month: monthNames[now.getMonth()],
+        year: now.getFullYear().toString(),
+        day: "", // Reset day or keep it optional
+      }));
+    }
+  }, [openState]);
 
   const handleFormData = (e: any): void => {
     const { name, value } = e.target;
@@ -32,7 +47,8 @@ const AddInflow: React.FC = () => {
     e.preventDefault();
     addInflow({
       ...inflowData,
-      amount: Number(inflowData.amount)
+      amount: Number(inflowData.amount),
+      day: Number(inflowData.day) || 0
     }, dispatch);
     // dispatch(toggleInflow());
     setInflowData({
@@ -41,6 +57,7 @@ const AddInflow: React.FC = () => {
       month: "",
       source: "",
       year: "",
+      day: "",
     });
   };
 
@@ -50,6 +67,7 @@ const AddInflow: React.FC = () => {
       style={{
         overlay: {
           backgroundColor: "transparent",
+          zIndex: 50,
         },
       }}
       isOpen={openState}
@@ -102,18 +120,14 @@ const AddInflow: React.FC = () => {
                 className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition appearance-none cursor-pointer"
               >
                 <option value="">Select</option>
-                <option value="Salary">Salary</option>
-                <option value="Gift">Gift</option>
-                <option value="Stocks">Stocks</option>
-                <option value="SIP_MF">SIP/MF</option>
-                <option value="Last_Month_Carry">Carry From Last Month</option>
-                <option value="Miscellaneous">Miscellaneous</option>
-                <option value="Other">Other</option>
+                {InflowSources.map((src) => (
+                  <option key={src} value={src}>{src.replace(/_/g, " ")}</option>
+                ))}
               </select>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <label
                 htmlFor="month"
@@ -162,6 +176,50 @@ const AddInflow: React.FC = () => {
                 placeholder="0000"
                 className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               />
+            </div>
+
+            <div>
+              <label
+                htmlFor="day"
+                className="block text-sm font-medium text-white mb-2"
+              >
+                Day
+              </label>
+              <div className="relative">
+                <input
+                  id="day"
+                  name="day"
+                  type="number"
+                  min="1"
+                  max="31"
+                  value={inflowData.day}
+                  onChange={handleFormData}
+                  placeholder="DD"
+                  className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition pr-10"
+                />
+                <div className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 w-6 h-6 overflow-hidden">
+                  <input
+                    type="date"
+                    className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                    onChange={(e) => {
+                      const date = new Date(e.target.value);
+                      if (!isNaN(date.getTime())) {
+                        const day = date.getDate();
+                        const year = date.getFullYear();
+                        const monthNames = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+                        const month = monthNames[date.getMonth()];
+                        setInflowData({
+                          ...inflowData,
+                          day,
+                          month,
+                          year: year.toString(),
+                        });
+                      }
+                    }}
+                  />
+                  <i className="fa fa-calendar w-full h-full flex items-center justify-center pointer-events-none text-gray-500"></i>
+                </div>
+              </div>
             </div>
           </div>
 

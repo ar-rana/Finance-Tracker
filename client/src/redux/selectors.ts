@@ -48,3 +48,16 @@ export const getAwards = (state: RootState) => state.user.awards;
 export const getStocks = (state: RootState) => state.data.stocks;
 export const getExpenses = (state: RootState) => state.data.expenses;
 export const getInflows = (state: RootState) => state.data.inflows;
+
+export const getPieData = (state: RootState) => state.chart.pieData;
+export const getExpensePieData = (state: RootState) => state.chart.expensePieData;
+export const getIncomePieData = (state: RootState) => state.chart.incomePieData;
+export const getHollowPieData = (state: RootState) => state.chart.hollowPieData;
+export const getInHollowPieData = (state: RootState) => state.chart.inHollowPieData;
+export const getOutHollowPieData = (state: RootState) => state.chart.outHollowPieData;
+export const getCategoryBarData = (state: RootState) => state.chart.categoryBarData;
+export const getBarData = (state: RootState) => state.chart.barData;
+export const getLineData = (state: RootState) => state.chart.lineData;
+export const getInScatterData = (state: RootState) => state.chart.inScatterData;
+export const getOutScatterData = (state: RootState) => state.chart.outScatterData;
+export const getRadarData = (state: RootState) => state.chart.radarData;

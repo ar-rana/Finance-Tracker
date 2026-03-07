@@ -1,14 +1,7 @@
 import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import { useSelector } from "react-redux";
 
 const RADIAN = Math.PI / 180;
-// total = 152 (%)
-const chartData = [
-  { name: "In_budget", value: 80, fill: "#82ca9d" },
-  { name: "Near_budget", value: 20, fill: "#2C74B3" },
-  { name: "Crossed_budget", value: 25, fill: "#F4CE14" },
-  { name: "Far_from_budget", value: 25, fill: "#BF092F" },
-  { name: "No_hope", value: 2, fill: "#000000" },
-];
 
 type Needle = {
   value: number;
@@ -18,10 +11,12 @@ type Needle = {
   iR: number;
   oR: number;
   color: string;
+  gaugeMax: number; // Added gaugeMax to Needle type
 };
 
-const needle = ({ value, data, cx, cy, iR, oR, color }: Needle) => {
-  const total = data.reduce((sum, entry) => sum + entry.value, 0);
+const needle = ({ value, cx, cy, iR, oR, color, gaugeMax }: Omit<Needle, 'data'>) => {
+  // Use gaugeMax for the total range of the gauge
+  const total = gaugeMax;
   const ang = 180.0 * (1 - value / total);
   const length = (iR + 2 * oR) / 3;
   const sin = Math.sin(-RADIAN * ang);
@@ -55,11 +50,34 @@ const needle = ({ value, data, cx, cy, iR, oR, color }: Needle) => {
 };
 
 const BudgetMeter = ({ isAnimationActive = true }: { isAnimationActive?: boolean }) => {
+  const expenses = useSelector((state: any) => state.data.expenses);
+  const settings = useSelector((state: any) => state.settings.settings);
+
+  // Get current month name in lowercase (e.g. "february")
+  const currentMonthName = new Date().toLocaleString("en-US", { month: "long" }).toLowerCase();
+
+  // Sum expenses for the current month only by matching month name string
+  const currentMonthTotal = (expenses || [])
+    .filter((exp: any) => exp.month?.toLowerCase() === currentMonthName)
+    .reduce((sum: number, exp: any) => sum + (Number(exp.amount) || 0), 0);
+
+  const budget = Number(settings?.budget) || 10000;
+
+  // Gauge segments scaled to budget — always total = budget
+  const chartData = [
+    { name: "In Budget", value: budget * 0.60, fill: "#82ca9d" }, // (0–60%)
+    { name: "Near Budget", value: budget * 0.20, fill: "#2C74B3" }, // (60–80%)
+    { name: "At Limit", value: budget * 0.15, fill: "#F4CE14" }, // (80–100%)
+    { name: "Over Budget", value: budget * 0.05, fill: "#BF092F" }, // (100%+)
+    { name: "No Hope", value: budget * 0.02, fill: "#000000" }, // (100%+)
+  ];
+
   const cx = 180;
   const cy = 150;
   const iR = 60;
   const oR = 110;
-  const value = 50;
+  const needleValue = Math.min(currentMonthTotal, budget);
+  const gaugeMax = budget;
 
   return (
     <ResponsiveContainer width="100%" height="100%" className={`bg-white flex`}>
@@ -77,7 +95,7 @@ const BudgetMeter = ({ isAnimationActive = true }: { isAnimationActive?: boolean
           stroke="none"
           isAnimationActive={isAnimationActive}
         />
-        {needle({ value, data: chartData, cx, cy, iR, oR, color: "#000000" })}
+        {needle({ value: needleValue, cx, cy, iR, oR, color: "#000000", gaugeMax })}
         <Legend />
         <Tooltip />
       </PieChart>

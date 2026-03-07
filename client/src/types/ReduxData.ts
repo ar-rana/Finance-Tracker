@@ -4,7 +4,8 @@ export const Slices = {
     modal: "modal",
     settings: "settings",
     user: "user",
-    data: "data"
+    data: "data",
+    chart: "chart"
 }
 
 export interface ReduxModalState {
@@ -39,4 +40,19 @@ export interface DataState {
 export interface SettingsDate {
     start: string;
     end: string;
+}
+
+export interface ChartState {
+    pieData: any[];
+    expensePieData: any[];
+    incomePieData: any[];
+    hollowPieData: any[];
+    inHollowPieData: any[];
+    outHollowPieData: any[];
+    categoryBarData: any[];
+    barData: any[];
+    lineData: any[];
+    inScatterData: any[];
+    outScatterData: any[];
+    radarData: any[];
 }

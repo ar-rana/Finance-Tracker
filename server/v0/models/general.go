@@ -8,6 +8,7 @@ type Expense struct {
 	Month       string `json:"month"`
 	Description string `json:"description"`
 	Year        string `json:"year"`
+	Day         int32  `json:"day"`
 	User        string `json:"username"`
 }
 
@@ -20,6 +21,7 @@ type Inflow struct {
 	Month       string `json:"month"`
 	Description string `json:"description"`
 	Year        string `json:"year"`
+	Day         int32  `json:"day"`
 	User        string `json:"username"`
 }
 

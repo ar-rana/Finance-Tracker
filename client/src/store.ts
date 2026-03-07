@@ -3,6 +3,7 @@ import modalReducer from "./redux/modalSlice";
 import settingsReducer from "./redux/settingsSlice";
 import userReducer from "./redux/userSlice";
 import dataReducer from "./redux/dataSlice";
+import chartReducer from "./redux/chartSlice";
 
 // there is somr 'applyMiddleware' functionality in redux
 
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
     settings: settingsReducer,
     user: userReducer,
     data: dataReducer,
+    chart: chartReducer,
 })
 
 // now my reduxt state will lool like

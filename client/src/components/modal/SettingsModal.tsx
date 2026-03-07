@@ -9,6 +9,7 @@ import { allSettings, setGraphs } from "../../redux/settingsSlice";
 import { Graphs } from "../../types/Component";
 import FormHeader from "../helpers/FormHeader";
 import useDebounce from "../../hooks/useDebounce";
+import { updateSettings } from "../../api/userAPIs";
 
 const SettingsModal: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -34,22 +35,41 @@ const SettingsModal: React.FC = () => {
   };
 
   useEffect(() => {
+    const formatDateForInput = (dateStr: string) => {
+      if (!dateStr) return "";
+      if (dateStr.includes("-")) return dateStr; // already YYYY-MM-DD
+      const parts = dateStr.split("/");
+      if (parts.length === 3) {
+        console.log(`${parts[2]}-${parts[1]}-${parts[0]}`);
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+      }
+      return dateStr;
+    };
+
     setSettings({
       ...settings,
-      end: globalsettings.end,
-      start: globalsettings.start,
+      end: formatDateForInput(globalsettings.end),
+      start: formatDateForInput(globalsettings.start),
+      budget: globalsettings.budget,
+      graphs: globalsettings.graphs && globalsettings.graphs.length > 0 ? globalsettings.graphs : settings.graphs,
     });
-  }, [globalsettings.start, globalsettings.end])
+  }, [globalsettings.start, globalsettings.end, globalsettings.budget, globalsettings.graphs]);
 
 
   const graphs = Object.values(Graphs);
 
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateSettings(settings, dispatch);
+  }
+
   return (
     <Modal
-      className="z-20 fixed h-[55%] w-[50%] left-1/2 right-1/2 transform -translate-x-1/2 top-1/5 shadow-2xl rounded-2xl overflow-auto bg-gray-800 border-2 border-white scrollbar-hide"
+      className="z-[20] fixed h-[55%] w-[50%] left-1/2 right-1/2 transform -translate-x-1/2 top-1/5 shadow-2xl rounded-2xl overflow-auto bg-gray-800 border-2 border-white scrollbar-hide"
       style={{
         overlay: {
           backgroundColor: "transparent",
+          zIndex: 50,
         },
       }}
       isOpen={openState}
@@ -164,7 +184,7 @@ const SettingsModal: React.FC = () => {
             </div>
           </div>
 
-          <FormSubmitBtn func={() => { }} />
+          <FormSubmitBtn func={(e) => handleFormSubmit(e)} />
         </form>
       </div>
     </Modal>

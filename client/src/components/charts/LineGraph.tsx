@@ -1,93 +1,12 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-const data = [
-  {
-    month: 'Winner',
-    expenditure: 4000,
-    income: 2400,
-    amt: 2400,
-  },
-  {
-    month: 'February',
-    expenditure: 3000,
-    income: 1398,
-    amt: 2210,
-  },
-  {
-    month: 'March',
-    expenditure: 2000,
-    income: 9800,
-    amt: 2290,
-  },
-  {
-    month: 'June',
-    expenditure: 2780,
-    income: 3908,
-    amt: 2000,
-  },
-  {
-    month: 'Dec',
-    expenditure: 1890,
-    income: 4800,
-    amt: 2181,
-  },
-  {
-    month: 'April',
-    expenditure: 4000,
-    income: 2400,
-    amt: 2400,
-  },
-  {
-    month: 'May',
-    expenditure: 3000,
-    income: 1398,
-    amt: 2210,
-  },
-  {
-    month: 'July',
-    expenditure: 2000,
-    income: 9800,
-    amt: 2290,
-  },
-  {
-    month: 'August',
-    expenditure: 2780,
-    income: 3908,
-    amt: 2000,
-  },
-  {
-    month: 'September',
-    expenditure: 1890,
-    income: 4800,
-    amt: 2181,
-  },
-  {
-    month: 'November',
-    expenditure: 2780,
-    income: 3908,
-    amt: 2000,
-  },
-  {
-    month: 'January',
-    expenditure: 1890,
-    income: 4800,
-    amt: 2181,
-  },
-  {
-    month: 'Thirteen',
-    expenditure: 2780,
-    income: 3908,
-    amt: 2000,
-  },
-  {
-    month: 'Fourteen',
-    expenditure: 1890,
-    income: 4800,
-    amt: 2181,
-  },
-];
+import { useAppSelector } from '../../hooks/reduxHooks';
+import { getLineData } from '../../redux/selectors';
 
 const LineGraph = () => {
+  const data = useAppSelector(getLineData);
+  if (!data || data.length === 0) return <div>No Data Available for Line Graph</div>;
+
   return (
     <ResponsiveContainer width="100%" height="100%" className={`bg-white`}>
       <LineChart
@@ -106,8 +25,8 @@ const LineGraph = () => {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="expenditure" stroke="#8884d8" activeDot={{ r: 8 }} />
-        <Line type="monotone" dataKey="income" stroke="#82ca9d" />
+        <Line name="Expense" type="monotone" dataKey="expense" stroke="#8884d8" activeDot={{ r: 8 }} />
+        <Line name="Income" type="monotone" dataKey="income" stroke="#82ca9d" />
       </LineChart>
     </ResponsiveContainer>
   );

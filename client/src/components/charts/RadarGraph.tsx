@@ -1,63 +1,33 @@
 import { Radar, RadarChart, PolarGrid, Legend, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 
-const data = [
-  {
-    subject: 'Math',
-    A: 120,
-    B: 110,
-    fullMark: 150,
-  },
-  {
-    subject: 'Chinese',
-    A: 98,
-    B: 130,
-    fullMark: 150,
-  },
-  {
-    subject: 'English',
-    A: 86,
-    B: 130,
-    fullMark: 150,
-  },
-  {
-    subject: 'Geography',
-    A: 99,
-    B: 100,
-    fullMark: 150,
-  },
-  {
-    subject: 'Physics',
-    A: 85,
-    B: 90,
-    fullMark: 150,
-  },
-  {
-    subject: 'History',
-    A: 65,
-    B: 85,
-    fullMark: 150,
-  },
-  {
-    subject: 'seventh',
-    A: 0,
-    B: 85,
-    fullMark: 150,
-  },
-];
+import { useAppSelector } from '../../hooks/reduxHooks';
+import { getRadarData } from '../../redux/selectors';
+import { INCOME_COLOR, EXPENSE_COLOR } from '../helpers/ColorToggleBtn';
 
 const RadarGraph = () => {
+  const data = useAppSelector(getRadarData);
+  if (!data || data.length === 0) return <div>No Data Available for Radar</div>;
+
   return (
-      <ResponsiveContainer width="100%" height="100%" className={`bg-white`}>
-        <RadarChart cx="50%" cy="45%" outerRadius="80%" data={data}>
-          <PolarGrid />
-          <PolarAngleAxis dataKey="subject" />
-          <PolarRadiusAxis angle={30} domain={[0, 150]} />
-          <Radar name="Expense-/" dataKey="A" stroke="#8884d8" fill="#8884d8" fillOpacity={0.8} />
-          <Radar name="/-Income" dataKey="B" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.5} />
-          <Legend />
-        </RadarChart>
-      </ResponsiveContainer>
-    );
+    <ResponsiveContainer width="100%" height="100%" className={`bg-white`}>
+      <RadarChart cx="50%" cy="45%" outerRadius="70%" data={data}>
+        <PolarGrid />
+        <PolarAngleAxis dataKey="subject" tick={{ fontSize: 14 }} />
+        <PolarRadiusAxis
+          angle={30}
+          tick={{ fontSize: 13, fill: "#555" }}
+          tickFormatter={(val) => {
+            if (val >= 100000) return `${(val / 100000).toFixed(1)}L`;
+            if (val >= 1000) return `${(val / 1000).toFixed(1)}k`;
+            return val;
+          }}
+        />
+        <Radar name="Expense" dataKey="expense" stroke={EXPENSE_COLOR} fill={EXPENSE_COLOR} fillOpacity={0.8} />
+        <Radar name="Income" dataKey="income" stroke={INCOME_COLOR} fill={INCOME_COLOR} fillOpacity={0.5} />
+        <Legend />
+      </RadarChart>
+    </ResponsiveContainer>
+  );
 };
 
 export default RadarGraph;

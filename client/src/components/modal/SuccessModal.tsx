@@ -22,6 +22,7 @@ const SuccessModal: React.FC = () => {
             style={{
                 overlay: {
                     backgroundColor: "transparent",
+                    zIndex: 50,
                 },
             }}
             isOpen={successOpen}
