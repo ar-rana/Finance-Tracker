@@ -14,3 +14,7 @@ __azurite_db*__.json
 emulatorcert.crt
 v0/go.sum
 handler.exe
+handler
+
+.gocache
+.gomodcache
