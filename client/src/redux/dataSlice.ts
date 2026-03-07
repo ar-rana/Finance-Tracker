@@ -32,9 +32,15 @@ export const dataSlice = createSlice({
             if (!state.expenses) state.expenses = [];
             state.expenses.push(action.payload);
         },
+        removeExpenseById: (state, action: PayloadAction<string>) => {
+            state.expenses = state.expenses.filter((e: any) => e.id !== action.payload);
+        },
+        removeInflowById: (state, action: PayloadAction<string>) => {
+            state.inflows = state.inflows.filter((i: any) => i.id !== action.payload);
+        },
     },
 });
 
-export const { setStocks, setExpenses, setInflows, setStock, setInflow, setExpense } = dataSlice.actions;
+export const { setStocks, setExpenses, setInflows, setStock, setInflow, setExpense, removeExpenseById, removeInflowById } = dataSlice.actions;
 
 export default dataSlice.reducer;

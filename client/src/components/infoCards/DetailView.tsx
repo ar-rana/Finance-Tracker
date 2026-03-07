@@ -210,10 +210,12 @@ const DetailView: React.FC = () => {
             allEntries.map((entry: any) => (
               <LatestEntry
                 key={entry.id}
+                id={entry.id}
                 type={entry.entryType}
                 title={entry.entryType === 'income' ? (entry.source || 'Inflow') : (entry.category || 'Expense')}
                 amount={`₹${(Number(entry.amount) || 0).toLocaleString()}`}
                 date={`${entry.month} ${entry.year}`}
+                day={entry.day}
                 description={entry.description || ''}
               />
             ))

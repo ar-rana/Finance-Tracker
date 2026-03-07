@@ -3,7 +3,7 @@ import type { AppDispatch } from "../store";
 import { success, warn } from "../redux/modalSlice";
 import type { Response as ApiResponse } from "../types/APIData";
 import type { AddExpenseForm, InflowForm } from "../types/FormsData";
-import { setExpense, setExpenses, setInflow, setInflows } from "../redux/dataSlice";
+import { setExpense, setExpenses, setInflow, setInflows, removeExpenseById, removeInflowById } from "../redux/dataSlice";
 
 const API_URL = import.meta.env.VITE_BASE_URL || "http://localhost:7071";
 
@@ -50,7 +50,8 @@ function removeExpense(id: string, dispatch: AppDispatch) {
         const res = response.data;
 
         if (res.success) {
-            // Success logic
+            dispatch(removeExpenseById(id));
+            dispatch(success(res.message || "Expense deleted successfully!"));
         } else {
             dispatch(warn(res.message));
         }
@@ -101,7 +102,8 @@ function removeInflow(id: string, dispatch: AppDispatch) {
         const res = response.data;
 
         if (res.success) {
-            // Success logic
+            dispatch(removeInflowById(id));
+            dispatch(success(res.message || "Inflow deleted successfully!"));
         } else {
             dispatch(warn(res.message));
         }
