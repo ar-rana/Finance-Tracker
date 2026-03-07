@@ -26,13 +26,13 @@ func CreateNewUser(item models.User) (map[string]any, error) {
 		return nil, errors.New("user already exists")
 	}
 
-	whiteListed, err := checkWhiteListedUser(item.Username)
-	if err != nil {
-		return nil, err
-	}
-	if !whiteListed {
-		return nil, errors.New("user is not whitelisted")
-	}
+	// whiteListed, err := checkWhiteListedUser(item.Username)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// if !whiteListed {
+	// 	return nil, errors.New("user is not whitelisted")
+	// }
 
 	var id string = uuid.New().String()
 	item.Id = id
