@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
-import Modal from "react-modal";
 import type { AddExpenseForm } from "../../types/FormsData";
 import { ExpenseCategories } from "../../types/FormsData";
 import FormSubmitBtn from "../helpers/FormSubmitBtn";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { getExpenseModalState } from "../../redux/selectors";
 import { toggleExpense } from "../../redux/modalSlice";
-import FormHeader from "../helpers/FormHeader";
 import { addExpense } from "../../api/inflow-outflow";
 import { warn } from "../../redux/modalSlice";
+import DraggableModal from "./DraggableModal";
 
 const AddExpense: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -69,20 +68,7 @@ const AddExpense: React.FC = () => {
   };
 
   return (
-    <Modal
-      className="z-10 fixed h-[45%] w-[50%] left-1/2 right-1/2 transform -translate-x-1/2 translate-y-1/2 shadow-2xl rounded-2xl overflow-auto bg-gray-800 border-2 border-white scrollbar-hide"
-      style={{
-        overlay: {
-          backgroundColor: "transparent",
-          zIndex: 50,
-        },
-      }}
-      isOpen={openState}
-      onRequestClose={() => dispatch(toggleExpense())}
-      ariaHideApp={false}
-    >
-      <FormHeader thunk={toggleExpense} heading="Add Expenses" />
-
+    <DraggableModal heading="Add Expenses" isOpen={openState} thunk={toggleExpense}>
       <div className="p-4 h-max">
         <form className="space-y-2">
           <div className="grid grid-cols-2 gap-4">
@@ -249,7 +235,7 @@ const AddExpense: React.FC = () => {
           <FormSubmitBtn func={onSubmit} />
         </form>
       </div>
-    </Modal>
+    </DraggableModal>
   );
 };
 

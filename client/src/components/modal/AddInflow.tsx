@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import Modal from "react-modal";
 import type { InflowForm } from "../../types/FormsData";
 import { InflowSources } from "../../types/FormsData";
 import FormSubmitBtn from "../helpers/FormSubmitBtn";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { getInflowModalState } from "../../redux/selectors";
 import { toggleInflow } from "../../redux/modalSlice";
-import FormHeader from "../helpers/FormHeader";
 import { addInflow } from "../../api/inflow-outflow";
+import DraggableModal from "./DraggableModal";
 
 const AddInflow: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -62,20 +61,7 @@ const AddInflow: React.FC = () => {
   };
 
   return (
-    <Modal
-      className="z-10 fixed h-[45%] w-[50%] left-1/2 right-1/2 transform -translate-x-1/2 translate-y-1/2 shadow-2xl rounded-2xl overflow-auto bg-gray-800 border-2 border-white scrollbar-hide"
-      style={{
-        overlay: {
-          backgroundColor: "transparent",
-          zIndex: 50,
-        },
-      }}
-      isOpen={openState}
-      onRequestClose={() => dispatch(toggleInflow())}
-      ariaHideApp={false}
-    >
-      <FormHeader thunk={toggleInflow} heading="Add Money Inflow" />
-
+    <DraggableModal heading="Add Money Inflow" isOpen={openState} thunk={toggleInflow}>
       <div className="p-4 h-max">
         <form className="space-y-2">
           <div className="grid grid-cols-2 gap-4">
@@ -242,7 +228,7 @@ const AddInflow: React.FC = () => {
           <FormSubmitBtn func={onSubmit} />
         </form>
       </div>
-    </Modal>
+    </DraggableModal>
   );
 };
 

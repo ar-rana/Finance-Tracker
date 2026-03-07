@@ -102,6 +102,16 @@ const AwardModal: React.FC = () => {
                 Minimal Spending Award
               </span>
             </li>
+            <li
+              onClick={() => {
+                setAward("Super Star Award");
+                setOpen(false);
+              }}
+            >
+              <span className="block px-4 py-2 hover:bg-cyan-400">
+                Super Star Award
+              </span>
+            </li>
           </ul>
         </div>
       </div>
