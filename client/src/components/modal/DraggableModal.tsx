@@ -67,7 +67,7 @@ const DraggableModal: React.FC<DraggablePopupProps> = (props) => {
       >
         <h2 className="text-xl font-bold text-white">{props.heading}</h2>
         <i
-          className="font-bold fa fa-close text-white hover:text-gray-400 cursor-auto"
+          className="font-bold fa fa-close fa-2x text-white hover:text-gray-400 cursor-auto"
           onClick={() => dispatch(props.thunk())}
         />
       </div>
