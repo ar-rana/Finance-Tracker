@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import FormSubmitBtn from "../helpers/FormSubmitBtn";
-import type { SettingsForm } from "../../types/FormsData";
+import { SpecificBudget, type SettingsForm } from "../../types/FormsData";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { getAllSettingData, getSettingsModalState } from "../../redux/selectors";
 import { toggleSettings } from "../../redux/modalSlice";
@@ -21,16 +21,20 @@ const SettingsModal: React.FC = () => {
     end: "",
     budget: 0,
     graphs: ["Bar_Graphs", "Radar_Chart", "Pie_Chart", "Hollow_Pie_Chart", "Line_Graph", "Scatter_Plot", "Budget_Meter"],
+    specifiedBudgets: {},
   });
+  const [selectedSpecificCategory, setSelectedSpecificCategory] = useState<string>(SpecificBudget[0]);
+  const [specificBudgetValue, setSpecificBudgetValue] = useState<string>("");
 
   // const updateAllSettings = 
   useDebounce({ timer: 500, thunk: allSettings, payload: settings })
 
   const handleFormData = (e: any): void => {
     const { name, value } = e.target;
+    const normalizedValue = name === "budget" ? Number(value) : value;
     setSettings({
       ...settings,
-      [name]: value,
+      [name]: normalizedValue,
     });
   };
 
@@ -52,11 +56,42 @@ const SettingsModal: React.FC = () => {
       start: formatDateForInput(globalsettings.start),
       budget: globalsettings.budget,
       graphs: globalsettings.graphs && globalsettings.graphs.length > 0 ? globalsettings.graphs : settings.graphs,
+      specifiedBudgets: globalsettings.specifiedBudgets || {},
     });
-  }, [globalsettings.start, globalsettings.end, globalsettings.budget, globalsettings.graphs]);
+  }, [globalsettings.start, globalsettings.end, globalsettings.budget, globalsettings.graphs, globalsettings.specifiedBudgets]);
+
+  useEffect(() => {
+    const currentVal = settings.specifiedBudgets?.[selectedSpecificCategory];
+    setSpecificBudgetValue(currentVal !== undefined ? String(currentVal) : "");
+  }, [selectedSpecificCategory, settings.specifiedBudgets]);
 
 
   const graphs = Object.values(Graphs);
+
+  const handleSpecificBudgetChange = (value: string) => {
+    setSpecificBudgetValue(value);
+
+    setSettings((prev) => {
+      const nextSpecified = { ...(prev.specifiedBudgets || {}) };
+      const trimmed = value.trim();
+
+      if (trimmed === "") {
+        delete nextSpecified[selectedSpecificCategory];
+      } else {
+        const parsed = Number(trimmed);
+        if (Number.isFinite(parsed) && parsed > 0) {
+          nextSpecified[selectedSpecificCategory] = parsed;
+        } else if (parsed === 0) {
+          delete nextSpecified[selectedSpecificCategory];
+        }
+      }
+
+      return {
+        ...prev,
+        specifiedBudgets: nextSpecified,
+      };
+    });
+  };
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -141,6 +176,34 @@ const SettingsModal: React.FC = () => {
                 value={settings.budget}
                 onChange={handleFormData}
                 placeholder="Set a budget limit"
+                className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+              />
+            </div>
+          </div>
+
+          <div className="w-full flex-col flex sm:flex-row justify-center items-end gap-4">
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-white mb-2">Specific Budget Category</label>
+              <select
+                value={selectedSpecificCategory}
+                onChange={(e) => setSelectedSpecificCategory(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition appearance-none cursor-pointer"
+              >
+                {SpecificBudget.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-white mb-2">Specific Budget Amount</label>
+              <input
+                type="number"
+                min="0"
+                value={specificBudgetValue}
+                onChange={(e) => handleSpecificBudgetChange(e.target.value)}
+                placeholder="Set category budget"
                 className="w-full px-3 py-2.5 rounded-lg bg-gray-50 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               />
             </div>

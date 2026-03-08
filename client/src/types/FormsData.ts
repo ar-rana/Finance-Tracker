@@ -30,6 +30,7 @@ export interface SettingsForm {
   start: string;
   budget: number;
   graphs: string[];
+  specifiedBudgets?: Record<string, number>;
 }
 
 export interface AnalyticsFormState {
@@ -80,14 +81,13 @@ export const InflowSources = [
 
 export type InflowSource = (typeof InflowSources)[number];
 
-export const SpecializedBudget = [
+export const SpecificBudget = [
   "Travel",
   "Investment",
   "Personal Expenses",
   "Special Expenses",
   "Outlay",
   "Gold Investment",
-  "Cash",
   "Credit",
   "Spiritual",
 ];

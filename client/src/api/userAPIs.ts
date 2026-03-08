@@ -2,7 +2,7 @@ import axios from "axios";
 import type { AppDispatch } from "../store";
 import { setTime, success, toggleSettings, warn } from "../redux/modalSlice";
 import type { Response as ApiResponse } from "../types/APIData";
-import { setBudget, setDates, setGraphs } from "../redux/settingsSlice";
+import { setBudget, setDates, setGraphs, setSpecifiedBudgets } from "../redux/settingsSlice";
 import type { SettingsForm, AwardForm } from "../types/FormsData";
 import { setUser, setAward, setAwards } from "../redux/userSlice";
 
@@ -21,6 +21,7 @@ function getSettings(dispatch: AppDispatch) {
             console.log(JSON.stringify(res.data));
             dispatch(setGraphs(res.data.graph_preferences || []));
             dispatch(setBudget(res.data.budget));
+            dispatch(setSpecifiedBudgets(res.data.specific_budgets || {}));
             dispatch(setDates({ start: res.data.start, end: res.data.end }));
         } else {
             dispatch(warn(res.message));
@@ -32,9 +33,27 @@ function getSettings(dispatch: AppDispatch) {
 }
 
 function updateSettings(settings: SettingsForm, dispatch: AppDispatch) {
+    const parsedBudget = Number(settings.budget);
+    if (!Number.isFinite(parsedBudget) || parsedBudget < 0) {
+        dispatch(warn("Please enter a valid budget amount"));
+        return;
+    }
+
+    const cleanedSpecificBudgets = Object.entries(settings.specifiedBudgets || {}).reduce<Record<string, number>>(
+        (acc, [k, v]) => {
+            const num = Number(v);
+            if (Number.isFinite(num) && num > 0) {
+                acc[k] = Math.trunc(num);
+            }
+            return acc;
+        },
+        {}
+    );
+
     const payload = {
         graph_preferences: settings.graphs,
-        budget: typeof settings.budget === 'string' ? parseInt(settings.budget, 10) : settings.budget,
+        budget: Math.trunc(parsedBudget),
+        specific_budgets: cleanedSpecificBudgets,
         start: settings.start,
         end: settings.end
     };
@@ -45,6 +64,7 @@ function updateSettings(settings: SettingsForm, dispatch: AppDispatch) {
         if (res.success) {
             dispatch(setGraphs(res.data.graph_preferences || []));
             dispatch(setBudget(res.data.budget));
+            dispatch(setSpecifiedBudgets(res.data.specific_budgets || {}));
             dispatch(setDates({ start: res.data.start, end: res.data.end }));
             dispatch(toggleSettings());
         } else {

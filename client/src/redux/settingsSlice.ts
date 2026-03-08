@@ -8,6 +8,7 @@ const initialState: ReduxSettingState = {
     end: "",
     budget: 0,
     graphs: ["Bar_Graphs", "Radar_Chart", "Pie_Chart", "Hollow_Pie_Chart", "Line_Graph", "Scatter_Plot", "Budget_Meter"],
+    specifiedBudgets: {},
   },
 };
 
@@ -29,9 +30,12 @@ export const settingsSlice = createSlice({
     setBudget: (state, action: PayloadAction<number>) => {
       state.settings.budget = action.payload;
     },
+    setSpecifiedBudgets: (state, action: PayloadAction<Record<string, number>>) => {
+      state.settings.specifiedBudgets = action.payload || {};
+    },
   },
 });
 
-export const { allSettings, setGraphs, setDates, setBudget } = settingsSlice.actions;
+export const { allSettings, setGraphs, setDates, setBudget, setSpecifiedBudgets } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

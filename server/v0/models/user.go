@@ -1,10 +1,11 @@
 package models
 
 type Settings struct {
-	GraphPreferences []string `json:"graph_preferences"`
-	Budget           int32    `json:"budget"`
-	Start            string   `json:"start"`
-	End              string   `json:"end"`
+	GraphPreferences []string         `json:"graph_preferences"`
+	Budget           int32            `json:"budget"`
+	SpecificBudgets  map[string]int32 `json:"specific_budgets,omitempty"`
+	Start            string           `json:"start"`
+	End              string           `json:"end"`
 }
 
 type User struct {
